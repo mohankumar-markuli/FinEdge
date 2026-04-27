@@ -1,0 +1,27 @@
+{
+  "name": "finedge",
+  "version": "1.0.0",
+  "description": "FinEdge – Personal Finance & Expense Tracker API",
+  "homepage": "https://github.com/mohankumar-markuli/FinEdge#readme",
+  "bugs": {
+    "url": "https://github.com/mohankumar-markuli/FinEdge/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohankumar-markuli/FinEdge.git"
+  },
+  "license": "ISC",
+  "author": "mohankumar",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.5.0"
+  }
+}
