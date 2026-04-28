@@ -1,17 +1,23 @@
 require("dotenv").config();
 const express = require("express");
-
 const app = express();
+
 const connectDb = require("./config/database");
+
 const { logger } = require("./middleware/logger");
 
 // custom DNS provider then default
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
+app.use(logger);
+app.use(express.json());
+
 const PORT = process.env.PORT;
 
-app.use(logger);
+const authRouter = require("./routes/authRoutes");
+
+app.use("/", authRouter);
 
 app.get("/health", (req, res) => {
     try {
