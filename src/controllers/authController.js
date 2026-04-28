@@ -1,15 +1,14 @@
 const User = require("../models/userModel")
 
 const { validateSignUpData, validateLoginPassword } = require("../middleware/validator");
-const { getJWT } = require("../services/authServices");
+const { getJWT, getHashPassword } = require("../services/authServices");
 
 const userSignUp = async (req, res) => {
     try {
         validateSignUpData(req);
 
         const { firstName, lastName, emailId, password, currency } = req.body;
-        const saltRounds = parseInt(process.env.SALT_ROUNDS);
-        const passwordHash = await bcrypt.hash(password, saltRounds);
+        const passwordHash = await getHashPassword(password);
 
         const user = new User({
             firstName,
@@ -21,6 +20,12 @@ const userSignUp = async (req, res) => {
 
         const savedUser = await user.save();
 
+        const token = await getJWT(savedUser);
+
+        // Add the token to cookie and send the response back to the user
+        res.cookie("token", token, {
+            expires: new Date(Date.now() + 8 * 3600000),
+        });
         res.status(200).json({
             message: `User ${savedUser.firstName} registered successfully`,
             data: savedUser
@@ -29,7 +34,7 @@ const userSignUp = async (req, res) => {
     catch (err) {
         console.error(
             new Date().toISOString(),
-            "ERROR: ", err.message,
+            "ERROR: ", err,
         );
 
         res.status(400).json({
@@ -77,4 +82,24 @@ const userLogin = async (req, res) => {
     }
 };
 
-module.exports = { userSignUp, userLogin }
+const userlogout = async (req, res) => {
+    try {
+        res.cookie("token", null, {
+            expires: new Date(Date.now()),
+        });
+        res.json({
+            message: `Logout Successful`,
+        });;
+    } catch (err) {
+        console.error(
+            new Date().toISOString(),
+            "ERROR: ", err.message,
+        );
+        res.status(400).json({
+            message: `Failed to logout`,
+            error: "SERVER_ERROR",
+        });
+    }
+}
+
+module.exports = { userSignUp, userLogin, userlogout }

@@ -54,7 +54,7 @@ async function startDependencies() {
         });
     }
     catch (err) {
-        console.log(err)
+        console.error(err)
         console.log("database connection failed check network or serverIP");
     }
 }
