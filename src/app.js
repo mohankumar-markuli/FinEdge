@@ -17,9 +17,9 @@ const PORT = process.env.PORT;
 
 const authRouter = require("./routes/authRoutes");
 
-app.use("/", authRouter);
+app.use("/api/auth", authRouter);
 
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
     try {
         res.json({
             status: "OK",
