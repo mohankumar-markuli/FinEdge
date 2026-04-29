@@ -14,7 +14,7 @@ const validateSignUpData = (req) => {
     }
 }
 
-const validateLoginPassword = async (user, userInputPassword) => {
+const validatePassword = async (user, userInputPassword) => {
     const passwordHash = user.password;
 
     const isPasswordValid = await bcrypt.compare(
@@ -56,16 +56,6 @@ const validateEditUserData = async (req) => {
     }
 };
 
-const validatePassword = async (user, passwordFromUser) => {
-    const passwordHash = user.password;
-
-    const isPasswordValid = await bcrypt.compare(
-        passwordFromUser,
-        passwordHash
-    );
-    return isPasswordValid;
-}
-
 const validateChangePassword = async (req, res) => {
     const { password, newPassword } = req.body;
     console.log(req.user);
@@ -83,7 +73,7 @@ const validateChangePassword = async (req, res) => {
 
 module.exports = {
     validateSignUpData,
-    validateLoginPassword,
+    validatePassword,
     validateEditUserData,
     validateChangePassword
 };

@@ -1,6 +1,6 @@
 const User = require("../models/userModel")
 
-const { validateSignUpData, validateLoginPassword } = require("../middleware/validator");
+const { validateSignUpData, validatePassword } = require("../middleware/validator");
 const { getJWT, getHashPassword } = require("../services/authServices");
 
 const userSignUp = async (req, res) => {
@@ -52,7 +52,7 @@ const userLogin = async (req, res) => {
         if (!user) throw new Error("New User: Please SignUp");
 
         // compare pwd with the hash pwd in DB 
-        const isPasswordValid = await validateLoginPassword(user, password);
+        const isPasswordValid = await validatePassword(user, password);
         if (isPasswordValid) {
             const token = await getJWT(user);
 
