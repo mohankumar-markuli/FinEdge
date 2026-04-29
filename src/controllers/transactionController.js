@@ -47,6 +47,29 @@ const addTransaction = async (req, res) => {
             error: "BAD_REQUEST",
         });
     }
-}
+};
 
-module.exports = { addTransaction };
+const getTransactions = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const transactions = await Transaction.find({
+            userId
+        }).sort({ transactionDate: -1 });
+
+        res.status(200).json({
+            message: "Transactions fetched successfully",
+            count: transactions.length,
+            data: transactions,
+        });
+    } catch (err) {
+        console.error(new Date().toISOString(), "ERROR:", err.message,);
+
+        res.status(400).json({
+            message: `Failed to send request`,
+            error: "BAD_REQUEST",
+        });
+    }
+};
+
+
+module.exports = { addTransaction, getTransactions };
