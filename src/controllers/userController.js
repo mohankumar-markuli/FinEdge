@@ -1,4 +1,5 @@
-const { validateEditUserData } = require("../middleware/validator")
+const { validateEditUserData, validateChangePassword } = require("../middleware/validator")
+const { getHashPassword } = require("../services/authServices");
 
 const viewUser = async (req, res) => {
     try {
@@ -50,4 +51,35 @@ const editUser = async (req, res) => {
     }
 }
 
-module.exports = { viewUser, editUser };
+const changePassword = async (req, res) => {
+    try {
+        await validateChangePassword(req, res);
+
+        const loggedInUser = req.user;
+        const newPasswordHash = await getHashPassword(req.body.newPassword);
+
+        loggedInUser['password'] = newPasswordHash;
+        await loggedInUser.save();
+
+        res.cookie("token", null, {
+            expires: new Date(Date.now()),
+        });
+
+        res.status(200).json({
+            message: `Password Changed Successfully`,
+        });
+
+    } catch (err) {
+        console.error(
+            new Date().toISOString(),
+            "ERROR:", err.message,
+        );
+
+        res.status(400).json({
+            message: `Failed to change password`,
+            error: "VALIDATION_ERROR",
+        });
+    }
+}
+
+module.exports = { viewUser, editUser, changePassword };

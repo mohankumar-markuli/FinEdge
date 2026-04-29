@@ -56,8 +56,34 @@ const validateEditUserData = async (req) => {
     }
 };
 
+const validatePassword = async (user, passwordFromUser) => {
+    const passwordHash = user.password;
+
+    const isPasswordValid = await bcrypt.compare(
+        passwordFromUser,
+        passwordHash
+    );
+    return isPasswordValid;
+}
+
+const validateChangePassword = async (req, res) => {
+    const { password, newPassword } = req.body;
+    console.log(req.user);
+
+    const isOldPasswordValid = await validatePassword(req.user, password);
+    if (!isOldPasswordValid) {
+        throw new Error("Enter your old password again");
+    }
+
+    const isNewPasswordSame = await validatePassword(req.user, newPassword);
+    if (isNewPasswordSame) {
+        throw new Error("New password cant be same as old password");
+    }
+}
+
 module.exports = {
     validateSignUpData,
     validateLoginPassword,
-    validateEditUserData
+    validateEditUserData,
+    validateChangePassword
 };
