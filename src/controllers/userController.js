@@ -1,13 +1,10 @@
-const User = require("../models/userModel");
 
 const viewUser = async (req, res) => {
     try {
-
-        const user = await User.find({});
-
+        console.log(req.user);
         res.status(200).json({
-            message: `User fetched Successfully`,
-            data: user
+            message: `User ${req.user.firstName} fetched Successfully`,
+            data: req.user
         });
 
     } catch (err) {

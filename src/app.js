@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 
 const connectDb = require("./config/database");
+const cookieParser = require("cookie-parser");
 
 const { logger } = require('./middleware/logger');
 
@@ -12,6 +13,7 @@ dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 app.use(logger);
 app.use(express.json());
+app.use(cookieParser());
 
 const PORT = process.env.PORT;
 
