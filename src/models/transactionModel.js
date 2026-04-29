@@ -25,6 +25,10 @@ const transactionSchema = new mongoose.Schema(
             required: true,
             min: 1
         },
+        merchant: {
+            type: String,
+            trim: true
+        },
         description: {
             type: String,
             trim: true,
@@ -43,10 +47,6 @@ const transactionSchema = new mongoose.Schema(
             default: "cash"
         },
 
-        merchant: {
-            type: String,
-            trim: true
-        },
     },
     {
         timestamps: true
