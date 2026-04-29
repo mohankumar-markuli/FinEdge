@@ -4,7 +4,7 @@ const app = express();
 
 const connectDb = require("./config/database");
 
-const { logger } = require("./middleware/logger");
+const { logger } = require('./middleware/logger');
 
 // custom DNS provider then default
 const dns = require("dns");
@@ -15,9 +15,11 @@ app.use(express.json());
 
 const PORT = process.env.PORT;
 
-const authRouter = require("./routes/authRoutes");
+const authRouter = require('./routes/authRoutes');
+const userRouter = require('./routes/userRoutes');
 
 app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 
 app.get("/api/health", (req, res) => {
     try {
