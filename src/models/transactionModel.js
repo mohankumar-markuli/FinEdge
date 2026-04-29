@@ -11,19 +11,26 @@ const transactionSchema = new mongoose.Schema(
         type: {
             type: String,
             required: true,
-            enum: ["income", "expense"],
+            enum: {
+                values: ["income", "expense"],
+                message: `{VALUE} is not a valid type`
+            },
             index: true
         },
         category: {
             type: String,
             required: true,
-            enum: ["salary", "freelance", "food", "rent", "transport", "shopping", "entertainment", "health", "education", "investment", "other"],
+            enum: {
+                values: ["salary", "freelance", "food", "rent", "transport",
+                    "shopping", "entertainment", "health", "education", "investment", "other"],
+                message: `{VALUE} is not a valid category`
+            },
             index: true
         },
         amount: {
             type: Number,
-            required: true,
-            min: 1
+            required: [true, "Amount is required"],
+            min: [1, "Amount must be at least 1"]
         },
         merchant: {
             type: String,
@@ -43,7 +50,10 @@ const transactionSchema = new mongoose.Schema(
         },
         paymentMethod: {
             type: String,
-            enum: ["cash", "card", "upi", "bank"],
+            enum: {
+                values: ["cash", "card", "upi", "bank"],
+                message: `{VALUE} is not a valid type - consider from ["cash", "card", "upi", "bank"]`
+            },
             default: "cash"
         },
 
@@ -53,4 +63,5 @@ const transactionSchema = new mongoose.Schema(
     }
 );
 
+transactionSchema.index({ userId: 1, transactionDate: -1 });
 module.exports = mongoose.model("Transaction", transactionSchema);
