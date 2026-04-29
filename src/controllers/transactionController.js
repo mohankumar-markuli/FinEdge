@@ -71,5 +71,41 @@ const getTransactions = async (req, res) => {
     }
 };
 
+const getTransactionById = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const transactionId = req.params.transactionId;
 
-module.exports = { addTransaction, getTransactions };
+        if (!mongoose.Types.ObjectId.isValid(transactionId)) {
+            return res.status(400).json({
+                message: "Invalid transaction ID",
+            });
+        }
+
+        const transaction = await Transaction.findOne({
+            userId,
+            _id: transactionId
+        });
+
+        if (!transaction) {
+            return res.status(404).json({
+                message: "Transaction not found",
+            });
+        }
+
+        res.status(200).json({
+            message: "Transaction fetched successfully",
+            data: transaction,
+        });
+
+    } catch (err) {
+        console.error(new Date().toISOString(), "ERROR:", err.message,);
+
+        res.status(400).json({
+            message: `Failed to send request`,
+            error: "BAD_REQUEST",
+        });
+    }
+};
+
+module.exports = { addTransaction, getTransactions, getTransactionById };
