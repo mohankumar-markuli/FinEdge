@@ -2,113 +2,36 @@
 
 ## authRouter
 
-### 🔹 1. User signup API
+### 🔹 1. Auth Router
 
-**POST /signup**
-
-#### Body:
-
-```json
-{
-  "firstName": "Airtribe",
-  "lastName": "School",
-  "emailId": "airtribe@gmail.com",
-  "password": "Airtribe@123",
-  "currency": "INR"
-}
+```
+POST /api/auth/signup
 ```
 
-#### Notes:
-
-- `lastName` is optional
-- `currency` is optional with values: ["INR", "USD", "GBP"], (default "INR")
-
-#### Responses:
-
-- ✅ 201 → SUCCESS
-
-```json
-{
-  "message": "User Airtribe registered successfully",
-  "data": {
-    "firstName": "Airtribe",
-    "lastName": "School",
-    "emailId": "airtribe@gmail.com",
-    "password": "Airtribe@123",
-    "currency": "INR"
-  }
-}
+```
+POST /api/auth/login
 ```
 
-- ❌ 400 → BAD REQUEST
-
-```json
-{
-  "message": "Failed to signup",
-  "error": "VALIDATION_ERROR"
-}
+```
+POST /api/auth/logout
 ```
 
-### 🔹 2. User login API
+### 🔹 2. User Router APIs
 
-**POST /login**
-
-#### Body:
-
-```json
-{
-  "emailId": "airtribe@gmail.com",
-  "password": "Airtribe@123"
-}
+```
+GET /api/user/view
 ```
 
-#### Responses:
-
-- ✅ 201 → SUCCESS
-
-```json
-{
-  "message": "Airtribe Logged in Successfully",
-  "data": {
-    "firstName": "Airtribe",
-    "lastName": "School",
-    "emailId": "airtribe@gmail.com",
-    "password": "$2b$10$ZrB20wMUHMOF0TrfxeuRWeGVq/0I1nLx0e8DB79H/PeutUyTtDXWu",
-    "currency": "INR",
-    "createdAt": "2026-04-28T12:03:32.856Z",
-    "updatedAt": "2026-04-28T12:03:32.856Z"
-  }
-}
+```
+PATCH /api/user/edit
 ```
 
-- ❌ 400 → BAD REQUEST
-
-```json
-{
-  "message": "Invalid credentials",
-  "error": "VALIDATION_ERROR"
-}
+```
+PATCH /api/user/changepassword
 ```
 
-### 🔹 3. User logout API
+### 🔹 3. Transaction Router APIs
 
-**POST /login**
-
-#### Responses:
-
-- ✅ 201 → SUCCESS
-
-```json
-{
-  "message": "Logout Successful"
-}
 ```
-
-- ❌ 400 → BAD REQUEST
-
-```json
-{
-  "message": "Failed to logout",
-  "error": "SERVER_ERROR"
-}
+POST /api/transaction
 ```
