@@ -24,7 +24,40 @@ const validateLoginPassword = async (user, userInputPassword) => {
     return isPasswordValid;
 };
 
+const validateEditUserData = async (req) => {
+    const allowedFields = [
+        "firstName",
+        "lastName",
+        "currency",
+    ];
+
+    const restrictedFields = ["emailId", "password"];
+
+    const keys = Object.keys(req.body);
+
+    const invalidFields = keys.filter(
+        (field) => !allowedFields.includes(field) && !restrictedFields.includes(field)
+    );
+
+    const forbiddenFields = keys.filter(
+        (field) => restrictedFields.includes(field)
+    );
+
+    if (forbiddenFields.length > 0) {
+        throw new Error(
+            `Cannot update restricted fields: ${forbiddenFields.join(", ")}`
+        );
+    }
+
+    if (invalidFields.length > 0) {
+        throw new Error(
+            `Invalid fields provided: ${invalidFields.join(", ")}`
+        );
+    }
+};
+
 module.exports = {
     validateSignUpData,
-    validateLoginPassword
+    validateLoginPassword,
+    validateEditUserData
 };
