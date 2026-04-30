@@ -1,13 +1,7 @@
-const express = require("express");
-const analyticsRouter = express.Router();
-
-const { userAuth } = require("../middlewares/userAuth");
 const Transaction = require("../models/transactionModel");
 const { transactionFilter } = require("../services/transactionService");
 
-analyticsRouter.use(userAuth);
-
-analyticsRouter.get('/summary', async (req, res) => {
+const getSummary = async (req, res) => {
     try {
         const filter = transactionFilter(req);
 
@@ -51,9 +45,9 @@ analyticsRouter.get('/summary', async (req, res) => {
             error: err.message
         });
     }
-});
+};
 
-analyticsRouter.get('/monthly', async (req, res) => {
+const getMonthlyTrends = async (req, res) => {
     try {
         const filter = transactionFilter(req);
 
@@ -108,6 +102,5 @@ analyticsRouter.get('/monthly', async (req, res) => {
             error: err.message
         });
     }
-})
-
-module.exports = analyticsRouter;
+}
+module.exports = { getSummary, getMonthlyTrends }

@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3000;
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
 const transactionRouter = require('./routes/transactionRoutes');
-const analyticsRouter = require('./utils/analytics');
+const analyticsRouter = require('./routes/analyticsRoutes');
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
@@ -53,8 +53,8 @@ async function startDependencies() {
         });
     }
     catch (err) {
-        console.error(err)
-        console.log("database connection failed check network or serverIP");
+        console.error("Startup failed:", err.message);
+        process.exit(1);
     }
 }
 
