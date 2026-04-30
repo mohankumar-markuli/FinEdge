@@ -20,10 +20,12 @@ const PORT = process.env.PORT;
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
 const transactionRouter = require('./routes/transactionRoutes');
+const analyticsRouter = require('./utils/analytics');
 
-app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
-app.use("/api/transaction", transactionRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/transactions", transactionRouter);
+app.use("/api/v1/analytics", analyticsRouter);
 
 app.get("/api/health", (req, res) => {
     try {
