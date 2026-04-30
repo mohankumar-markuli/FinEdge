@@ -3,14 +3,21 @@ const bcrypt = require("bcrypt");
 
 const validateSignUpData = (req) => {
     const { firstName, lastName, emailId, password, currency } = req.body;
+
     if (!firstName) {
-        throw new Error("first Name is required");
+        throw new Error("First name is required");
     }
-    else if (!validator.isEmail(emailId)) {
-        throw new Error("Email not valid");
+
+    if (!emailId || !validator.isEmail(emailId)) {
+        throw new Error("Valid email is required");
     }
-    else if (!validator.isStrongPassword(password)) {
-        throw new Error("Please enter strong password");
+
+    if (!password || !validator.isStrongPassword(password)) {
+        throw new Error("Strong password is required");
+    }
+
+    if (!currency) {
+        throw new Error("Currency is required");
     }
 }
 
@@ -24,7 +31,7 @@ const validatePassword = async (user, userInputPassword) => {
     return isPasswordValid;
 };
 
-const validateEditUserData = async (req) => {
+const validateEditUserData = (req) => {
     const allowedFields = [
         "firstName",
         "lastName",
@@ -34,6 +41,10 @@ const validateEditUserData = async (req) => {
     const restrictedFields = ["emailId", "password"];
 
     const keys = Object.keys(req.body);
+
+    if (keys.length === 0) {
+        throw new Error("No fields provided for update");
+    }
 
     const invalidFields = keys.filter(
         (field) => !allowedFields.includes(field) && !restrictedFields.includes(field)
@@ -56,22 +67,29 @@ const validateEditUserData = async (req) => {
     }
 };
 
-const validateChangePassword = async (req, res) => {
+const validateChangePassword = async (req) => {
     const { password, newPassword } = req.body;
-    console.log(req.user);
+
+    if (!password || !newPassword) {
+        throw new Error("Both old and new passwords are required");
+    }
+
+    if (!validator.isStrongPassword(newPassword)) {
+        throw new Error("New password must be strong");
+    }
 
     const isOldPasswordValid = await validatePassword(req.user, password);
     if (!isOldPasswordValid) {
-        throw new Error("Enter your old password again");
+        throw new Error("Incorrect current password");
     }
 
     const isNewPasswordSame = await validatePassword(req.user, newPassword);
     if (isNewPasswordSame) {
-        throw new Error("New password cant be same as old password");
+        throw new Error("New password cannot be same as old password");
     }
 }
 
-const validateEditTransactionData = async (req, res) => {
+const validateEditTransactionData = (req) => {
     const allowedFields = [
         "type",
         "category",
@@ -86,6 +104,10 @@ const validateEditTransactionData = async (req, res) => {
 
     const keys = Object.keys(req.body);
 
+    if (keys.length === 0) {
+        throw new Error("No fields provided for update");
+    }
+
     const invalidFields = keys.filter(
         (field) => !allowedFields.includes(field) && !restrictedFields.includes(field)
     );
@@ -104,6 +126,34 @@ const validateEditTransactionData = async (req, res) => {
         throw new Error(
             `Invalid fields provided: ${invalidFields.join(", ")}`
         );
+    }
+
+    // validating each data points
+
+    if (req.body.type) {
+        req.body.type = req.body.type.toLowerCase();
+    }
+
+    if (req.body.amount !== undefined && req.body.amount <= 0) {
+        throw new Error("Amount must be greater than 0");
+    }
+
+    const validTypes = ["income", "expense"];
+    if (req.body.type && !validTypes.includes(req.body.type)) {
+        throw new Error("Invalid transaction type");
+    }
+
+    if (req.body.category) {
+        req.body.category = req.body.category.toLowerCase();
+    }
+
+    const validCategories = [
+        "salary", "freelance", "food", "rent", "transport",
+        "shopping", "entertainment", "health", "education", "investment", "other"
+    ];
+
+    if (req.body.category && !validCategories.includes(req.body.category)) {
+        throw new Error("Invalid transaction category");
     }
 }
 
