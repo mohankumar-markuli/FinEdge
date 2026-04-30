@@ -77,6 +77,66 @@ const validateChangePassword = async (req) => {
     }
 }
 
+const validateTransactionFields = (req) => {
+
+    // normalization
+    if (req.body.type) req.body.type = req.body.type.toLowerCase();
+    if (req.body.category) req.body.category = req.body.category.toLowerCase();
+    if (req.body.paymentMethod) req.body.paymentMethod = req.body.paymentMethod.toLowerCase();
+
+    // validating each data points
+    if (req.body.amount !== undefined) {
+        const amount = Number(req.body.amount);
+
+        if (isNaN(amount) || amount <= 0) {
+            throw new Error("Amount must be a valid number greater than 0");
+        }
+
+        req.body.amount = amount;
+    }
+
+    if (typeof req.body.amount === "string" && req.body.amount.trim() === "") {
+        throw new Error("Amount cannot be empty");
+    }
+
+    const VALID_TYPES = new Set(["income", "expense"]);
+
+    if (req.body.type && !VALID_TYPES.has(req.body.type)) {
+        throw new Error("Invalid transaction type");
+    }
+
+    const VALID_CATEGORIES = new Set([
+        "salary", "freelance", "food", "rent", "transport",
+        "shopping", "entertainment", "health", "education", "investment", "other"
+    ]);
+
+    if (req.body.category && !VALID_CATEGORIES.has(req.body.category)) {
+        throw new Error("Invalid transaction category");
+    }
+
+    const VALID_PAYMENT_METHODS = new Set(["cash", "card", "upi", "bank"]);
+
+    if (req.body.paymentMethod && !VALID_PAYMENT_METHODS.has(req.body.paymentMethod)) {
+        throw new Error("Invalid transaction payment Method");
+    }
+
+    if (req.body.transactionDate) {
+        const date = new Date(req.body.transactionDate);
+        if (isNaN(date.getTime())) throw new Error("Invalid transaction date");
+        if (!date.getTime()) throw new Error("Invalid transaction date");
+        req.body.transactionDate = date;
+    }
+
+    if (req.body.merchant) {
+        req.body.merchant = req.body.merchant.trim();
+    }
+
+    if (req.body.description) {
+        req.body.description = req.body.description.trim();
+    }
+
+}
+
 const validateEditTransactionData = (req) => {
     const ALLOWED_FIELDS = new Set([
         "type",
@@ -98,47 +158,7 @@ const validateEditTransactionData = (req) => {
 
     validateFields(keys, ALLOWED_FIELDS, RESTRICTED_FIELDS);
 
-    // normalization
-    if (req.body.type) req.body.type = req.body.type.toLowerCase();
-    if (req.body.category) req.body.category = req.body.category.toLowerCase();
-
-    // validating each data points
-
-    if (req.body.amount !== undefined) {
-        const amount = Number(req.body.amount);
-
-        if (isNaN(amount) || amount <= 0) {
-            throw new Error("Amount must be a valid number greater than 0");
-        }
-
-        req.body.amount = amount;
-    }
-    if (typeof req.body.amount === "string" && req.body.amount.trim() === "") {
-        throw new Error("Amount cannot be empty");
-    }
-
-    const VALID_TYPES = new Set(["income", "expense"]);
-    if (req.body.type && !VALID_TYPES.has(req.body.type)) {
-        throw new Error("Invalid transaction type");
-    }
-
-    const VALID_CATEGORIES = new Set([
-        "salary", "freelance", "food", "rent", "transport",
-        "shopping", "entertainment", "health", "education", "investment", "other"
-    ]);
-    if (req.body.category && !VALID_CATEGORIES.has(req.body.category)) {
-        throw new Error("Invalid transaction category");
-    }
-
-    if (req.body.transactionDate) {
-        const date = new Date(req.body.transactionDate);
-        if (isNaN(date.getTime())) {
-            throw new Error("Invalid transaction date");
-        }
-    }
-    if (req.body.merchant) {
-        req.body.merchant = req.body.merchant.trim();
-    }
+    validateTransactionFields(req);
 }
 
 module.exports = {
@@ -146,5 +166,6 @@ module.exports = {
     validatePassword,
     validateEditUserData,
     validateChangePassword,
+    validateTransactionFields,
     validateEditTransactionData
 };
