@@ -6,12 +6,15 @@ const connectDb = require("./config/database");
 const cookieParser = require("cookie-parser");
 
 const { logger } = require('./middleware/logger');
+const { errorHandler } = require("./middleware/errorHandler");
 
 // custom DNS provider then default
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 app.use(logger);
+app.use(errorHandler);
+
 app.use(express.json());
 app.use(cookieParser());
 
