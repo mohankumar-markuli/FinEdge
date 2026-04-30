@@ -1,4 +1,6 @@
 const Transaction = require("../models/transactionModel");
+const { validateEditTransactionData } = require("../middleware/validator");
+const mongoose = require("mongoose");
 
 const addTransaction = async (req, res) => {
     try {
@@ -108,4 +110,53 @@ const getTransactionById = async (req, res) => {
     }
 };
 
-module.exports = { addTransaction, getTransactions, getTransactionById };
+const updateTransactionById = async (req, res) => {
+    try {
+        await validateEditTransactionData(req);
+
+        const userId = req.user._id;
+        const transactionId = req.params.transactionId;
+
+        if (!mongoose.Types.ObjectId.isValid(transactionId))
+            throw new Error("Invalid transaction ID");
+
+        if (req.body.transactionDate) {
+            const date = new Date(req.body.transactionDate);
+            if (!date.getTime()) throw new Error("Invalid transaction date");
+            req.body.transactionDate = date;
+        }
+
+        const updateTransaction = await Transaction.findOne({
+            userId,
+            _id: transactionId
+        });
+
+        Object.keys(req.body).forEach((key) => {
+            updateTransaction[key] = req.body[key];
+        });
+        await updateTransaction.save();
+
+        res.status(200).json({
+            message: `Transaction Updated Successfully`,
+            data: updateTransaction
+        });
+    }
+    catch (err) {
+        console.error(
+            new Date().toISOString(),
+            "ERROR:", err
+        );
+
+        res.status(400).json({
+            message: `Failed to update profile`,
+            error: "BAD_REQUEST",
+        });
+    }
+}
+
+module.exports = {
+    addTransaction,
+    getTransactions,
+    getTransactionById,
+    updateTransactionById
+};

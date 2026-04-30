@@ -71,9 +71,46 @@ const validateChangePassword = async (req, res) => {
     }
 }
 
+const validateEditTransactionData = async (req, res) => {
+    const allowedFields = [
+        "type",
+        "category",
+        "amount",
+        "merchant",
+        "description",
+        "transactionDate",
+        "paymentMethod"
+    ];
+
+    const restrictedFields = ["userId"];
+
+    const keys = Object.keys(req.body);
+
+    const invalidFields = keys.filter(
+        (field) => !allowedFields.includes(field) && !restrictedFields.includes(field)
+    );
+
+    const forbiddenFields = keys.filter(
+        (field) => restrictedFields.includes(field)
+    );
+
+    if (forbiddenFields.length > 0) {
+        throw new Error(
+            `Cannot update restricted fields: ${forbiddenFields.join(", ")}`
+        );
+    }
+
+    if (invalidFields.length > 0) {
+        throw new Error(
+            `Invalid fields provided: ${invalidFields.join(", ")}`
+        );
+    }
+}
+
 module.exports = {
     validateSignUpData,
     validatePassword,
     validateEditUserData,
-    validateChangePassword
+    validateChangePassword,
+    validateEditTransactionData
 };
