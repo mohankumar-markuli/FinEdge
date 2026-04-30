@@ -76,6 +76,33 @@ const getTransactions = async (req, res) => {
     }
 };
 
+const getRecentTransactions = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const limit = Number(req.query.limit) || 5;
+
+        const transactions = await Transaction.find({ userId })
+            .sort({ transactionDate: -1 })
+            .limit(limit)
+            .select("category amount transactionDate");
+
+        res.status(200).json({
+            message: "Recent transactions fetched successfully",
+            count: transactions.length,
+            data: transactions,
+        });
+
+    } catch (err) {
+        console.error(new Date().toISOString(), "ERROR:", err.message);
+
+        res.status(500).json({
+            message: "Failed to fetch recent transactions",
+            error: err.message,
+        });
+    }
+};
+
 const getTransactionById = async (req, res) => {
     try {
         const userId = req.user._id;
@@ -195,6 +222,7 @@ const deleteTransactionById = async (req, res) => {
 module.exports = {
     addTransaction,
     getTransactions,
+    getRecentTransactions,
     getTransactionById,
     updateTransactionById,
     deleteTransactionById
