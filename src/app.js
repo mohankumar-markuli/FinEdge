@@ -13,12 +13,10 @@ const dns = require("dns");
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 app.use(logger);
-app.use(errorHandler);
-
 app.use(express.json());
 app.use(cookieParser());
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -31,24 +29,14 @@ app.use("/api/v1/transactions", transactionRouter);
 app.use("/api/v1/analytics", analyticsRouter);
 
 app.get("/api/health", (req, res) => {
-    try {
-        res.json({
-            status: "OK",
-            message: "Server is running",
-            timestamp: new Date().toISOString()
-        });
-    } catch (err) {
-        console.error(
-            new Date().toISOString(),
-            "ERROR: ", err.message,
-        );
-
-        res.status(400).json({
-            message: `Health Check Failed`,
-            error: "INTERNAL_SERVER_ERROR",
-        });
-    }
+    res.json({
+        status: "OK",
+        message: "Server is running",
+        timestamp: new Date().toISOString()
+    });
 });
+
+app.use(errorHandler);
 
 async function startDependencies() {
     try {
