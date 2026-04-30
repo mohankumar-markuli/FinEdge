@@ -1,7 +1,7 @@
 const express = require("express");
 const analyticsRouter = express.Router();
 
-const { userAuth } = require("../middleware/userAuth");
+const { userAuth } = require("../middlewares/userAuth");
 const Transaction = require("../models/transactionModel");
 const { transactionFilter } = require("../services/transactionService");
 

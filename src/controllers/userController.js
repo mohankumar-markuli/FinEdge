@@ -1,4 +1,4 @@
-const { validateEditUserData, validateChangePassword } = require("../middleware/validator")
+const { validateEditUserData, validateChangePassword } = require("../middlewares/validator")
 const { getHashPassword } = require("../services/authServices");
 
 const viewUser = async (req, res) => {

@@ -1,6 +1,6 @@
 const User = require("../models/userModel")
 
-const { validateSignUpData, validatePassword } = require("../middleware/validator");
+const { validateSignUpData, validatePassword } = require("../middlewares/validator");
 const { getJWT, getHashPassword } = require("../services/authServices");
 
 const userSignUp = async (req, res) => {

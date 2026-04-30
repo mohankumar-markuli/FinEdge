@@ -5,8 +5,8 @@ const app = express();
 const connectDb = require("./config/database");
 const cookieParser = require("cookie-parser");
 
-const { logger } = require('./middleware/logger');
-const { errorHandler } = require("./middleware/errorHandler");
+const { logger } = require('./middlewares/logger');
+const { errorHandler } = require("./middlewares/errorHandler");
 
 // custom DNS provider then default
 const dns = require("dns");

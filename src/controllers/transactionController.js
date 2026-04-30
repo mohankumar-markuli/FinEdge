@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Transaction = require("../models/transactionModel");
 
-const { validateEditTransactionData } = require("../middleware/validator");
+const { validateEditTransactionData } = require("../middlewares/validator");
 const { transactionFilter } = require("../services/transactionService");
 
 const addTransaction = async (req, res) => {
