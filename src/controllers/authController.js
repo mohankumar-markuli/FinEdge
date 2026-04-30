@@ -3,11 +3,20 @@ const User = require("../models/userModel")
 const { validateSignUpData, validatePassword } = require("../middlewares/validator");
 const { getJWT, getHashPassword } = require("../services/authServices");
 
-const userSignUp = async (req, res) => {
+const userSignUp = async (req, res, next) => {
     try {
         validateSignUpData(req);
 
         const { firstName, lastName, emailId, password, currency } = req.body;
+
+        const existingUser = await User.findOne({ emailId });
+
+        if (existingUser) {
+            const err = new Error("User already exists");
+            err.statusCode = 400;
+            throw err;
+        }
+
         const passwordHash = await getHashPassword(password);
 
         const user = new User({
@@ -22,83 +31,99 @@ const userSignUp = async (req, res) => {
 
         const token = await getJWT(savedUser);
 
+        const userResponse = {
+            _id: savedUser._id,
+            firstName: savedUser.firstName,
+            lastName: savedUser.lastName,
+            emailId: savedUser.emailId,
+            currency: savedUser.currency
+        };
+
         // Add the token to cookie and send the response back to the user
         res.cookie("token", token, {
-            expires: new Date(Date.now() + 8 * 3600000),
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict",
+            maxAge: 8 * 60 * 60 * 1000,
         });
-        res.status(200).json({
+
+        res.status(201).json({
             message: `User ${savedUser.firstName} registered successfully`,
-            data: savedUser
+            data: userResponse
         });
     }
     catch (err) {
-        console.error(
-            new Date().toISOString(),
-            "ERROR: ", err,
-        );
-
-        res.status(400).json({
-            message: `Failed to signup`,
-            error: "VALIDATION_ERROR",
-        });
+        next(err);
     }
 };
 
-const userLogin = async (req, res) => {
+const userLogin = async (req, res, next) => {
     try {
         const { emailId, password } = req.body;
+
+        if (!emailId || !password) {
+            const err = new Error("Email and password are required");
+            err.statusCode = 400;
+            throw err;
+        }
+
         const user = await User.findOne({ emailId: emailId });
 
-        if (!user) throw new Error("New User: Please SignUp");
+        if (!user) {
+            const err = new Error("User not found. Please sign up.");
+            err.statusCode = 404;
+            throw err;
+        }
 
         // compare pwd with the hash pwd in DB 
         const isPasswordValid = await validatePassword(user, password);
         if (isPasswordValid) {
             const token = await getJWT(user);
 
+            const userResponse = {
+                _id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                emailId: user.emailId,
+                currency: user.currency
+            };
+
+
             // Add the token to cookie and send the response back to the user
             res.cookie("token", token, {
-                expires: new Date(Date.now() + 8 * 3600000),
+                httpOnly: true,
+                secure: false,
+                sameSite: "strict",
+                maxAge: 8 * 60 * 60 * 1000
             });
 
-            res.json({
-                "message": `${user.firstName} Logged In Successfully`,
-                "data": user
+            res.status(200).json({
+                message: `${user.firstName} Logged In Successfully`,
+                data: userResponse
             });
         }
         else {
-            throw new Error("Invalid credentials");
+            const err = new Error("Invalid credentials");
+            err.statusCode = 401;
+            throw err;
         }
 
     } catch (err) {
-        console.error(
-            new Date().toISOString(),
-            "ERROR: ", err.message,
-        );
-        res.status(400).json({
-            message: err.message,
-            error: "VALIDATION_ERROR",
-        });
+        next(err);
     }
 };
 
-const userlogout = async (req, res) => {
+const userlogout = async (req, res, next) => {
     try {
-        res.cookie("token", null, {
-            expires: new Date(Date.now()),
+        res.clearCookie("token", {
+            httpOnly: true,
+            sameSite: "strict",
         });
         res.json({
             message: `Logout Successful`,
         });;
     } catch (err) {
-        console.error(
-            new Date().toISOString(),
-            "ERROR: ", err.message,
-        );
-        res.status(400).json({
-            message: `Failed to logout`,
-            error: "SERVER_ERROR",
-        });
+        next(err);
     }
 }
 

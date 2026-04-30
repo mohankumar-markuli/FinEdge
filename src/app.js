@@ -40,16 +40,15 @@ app.use(errorHandler);
 
 async function startDependencies() {
     try {
-        console.log("Starting my Server dependencies...");
+        console.log("Starting dependencies...");
 
         // connect to database
         await connectDb();
-        console.log("   - DATABASE connection established...");
+        console.log("Database connected");
 
         // start the server
         app.listen(PORT, () => {
-            console.log("   - SERVER is up and running...");
-            console.log("All dependencies are up and running...");
+            console.log(`Server running on port ${PORT}`);
         });
     }
     catch (err) {
