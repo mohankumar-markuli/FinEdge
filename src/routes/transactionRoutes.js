@@ -9,10 +9,12 @@ const { addTransaction,
     updateTransactionById,
     deleteTransactionById } = require("../controllers/transactionController");
 
-transactionRouter.post("/", userAuth, addTransaction);
-transactionRouter.get("/", userAuth, getTransactions);
-transactionRouter.get("/:transactionId", userAuth, getTransactionById);
-transactionRouter.patch("/:transactionId", userAuth, updateTransactionById);
-transactionRouter.delete("/:transactionId", userAuth, deleteTransactionById);
+transactionRouter.use(userAuth);
+
+transactionRouter.post("/", addTransaction);
+transactionRouter.get("/", getTransactions);
+transactionRouter.get("/:transactionId", getTransactionById);
+transactionRouter.patch("/:transactionId", updateTransactionById);
+transactionRouter.delete("/:transactionId", deleteTransactionById);
 
 module.exports = transactionRouter;

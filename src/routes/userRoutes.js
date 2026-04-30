@@ -4,8 +4,10 @@ const userRouter = express.Router();
 const { userAuth } = require("../middleware/userAuth");
 const { viewUser, editUser, changePassword } = require("../controllers/userController");
 
-userRouter.get('/view', userAuth, viewUser);
-userRouter.patch('/edit', userAuth, editUser);
-userRouter.patch('/changepassword', userAuth, changePassword);
+userRouter.use(userAuth);
+
+userRouter.get('/view', viewUser);
+userRouter.patch('/edit', editUser);
+userRouter.patch('/changepassword', changePassword);
 
 module.exports = userRouter;
