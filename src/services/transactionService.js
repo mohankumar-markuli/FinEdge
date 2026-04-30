@@ -1,12 +1,13 @@
 const transactionFilter = (req) => {
     const userId = req.user._id;
-    const { category, type, startDate, endDate, paymentMethod } = req.query;
+    const { category, type, startDate, endDate, paymentMethod, search } = req.query;
 
     const filter = { userId };
 
     if (category) filter.category = category;
     if (type) filter.type = type;
     if (paymentMethod) filter.paymentMethod = paymentMethod;
+
 
     if (startDate || endDate) {
         filter.transactionDate = {};
@@ -28,6 +29,13 @@ const transactionFilter = (req) => {
             end.setHours(23, 59, 59, 999);
             filter.transactionDate.$lte = end;
         }
+    }
+
+    if (search) {
+        filter.$or = [
+            { description: { $regex: search, $options: "i" } },
+            { merchant: { $regex: search, $options: "i" } }
+        ];
     }
 
     return filter;
