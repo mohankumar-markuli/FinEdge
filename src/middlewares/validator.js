@@ -31,40 +31,28 @@ const validatePassword = async (user, userInputPassword) => {
     return isPasswordValid;
 };
 
+const validateFields = (keys, allowed, restricted) => {
+    const forbidden = keys.filter(k => restricted.has(k));
+    if (forbidden.length) {
+        throw new Error(`Restricted fields: ${forbidden.join(", ")}`);
+    }
+
+    const invalid = keys.filter(k => !allowed.has(k));
+    if (invalid.length) {
+        throw new Error(`Invalid fields: ${invalid.join(", ")}`);
+    }
+};
+
 const validateEditUserData = (req) => {
-    const allowedFields = [
-        "firstName",
-        "lastName",
-        "currency",
-    ];
+    const ALLOWED_FIELDS = new Set(["firstName", "lastName", "currency"]);
+    const RESTRICTED_FIELDS = new Set(["emailId", "password"]);
 
-    const restrictedFields = ["emailId", "password"];
-
-    const keys = Object.keys(req.body);
+    const keys = Object.keys(req.body || {});
 
     if (keys.length === 0) {
         throw new Error("No fields provided for update");
     }
-
-    const invalidFields = keys.filter(
-        (field) => !allowedFields.includes(field) && !restrictedFields.includes(field)
-    );
-
-    const forbiddenFields = keys.filter(
-        (field) => restrictedFields.includes(field)
-    );
-
-    if (forbiddenFields.length > 0) {
-        throw new Error(
-            `Cannot update restricted fields: ${forbiddenFields.join(", ")}`
-        );
-    }
-
-    if (invalidFields.length > 0) {
-        throw new Error(
-            `Invalid fields provided: ${invalidFields.join(", ")}`
-        );
-    }
+    validateFields(keys, ALLOWED_FIELDS, RESTRICTED_FIELDS);
 };
 
 const validateChangePassword = async (req) => {
@@ -90,7 +78,7 @@ const validateChangePassword = async (req) => {
 }
 
 const validateEditTransactionData = (req) => {
-    const allowedFields = [
+    const ALLOWED_FIELDS = new Set([
         "type",
         "category",
         "amount",
@@ -98,62 +86,58 @@ const validateEditTransactionData = (req) => {
         "description",
         "transactionDate",
         "paymentMethod"
-    ];
+    ]);
 
-    const restrictedFields = ["userId"];
+    const RESTRICTED_FIELDS = new Set(["userId"]);
 
-    const keys = Object.keys(req.body);
+    const keys = Object.keys(req.body || {});
 
     if (keys.length === 0) {
         throw new Error("No fields provided for update");
     }
 
-    const invalidFields = keys.filter(
-        (field) => !allowedFields.includes(field) && !restrictedFields.includes(field)
-    );
+    validateFields(keys, ALLOWED_FIELDS, RESTRICTED_FIELDS);
 
-    const forbiddenFields = keys.filter(
-        (field) => restrictedFields.includes(field)
-    );
-
-    if (forbiddenFields.length > 0) {
-        throw new Error(
-            `Cannot update restricted fields: ${forbiddenFields.join(", ")}`
-        );
-    }
-
-    if (invalidFields.length > 0) {
-        throw new Error(
-            `Invalid fields provided: ${invalidFields.join(", ")}`
-        );
-    }
+    // normalization
+    if (req.body.type) req.body.type = req.body.type.toLowerCase();
+    if (req.body.category) req.body.category = req.body.category.toLowerCase();
 
     // validating each data points
 
-    if (req.body.type) {
-        req.body.type = req.body.type.toLowerCase();
+    if (req.body.amount !== undefined) {
+        const amount = Number(req.body.amount);
+
+        if (isNaN(amount) || amount <= 0) {
+            throw new Error("Amount must be a valid number greater than 0");
+        }
+
+        req.body.amount = amount;
+    }
+    if (typeof req.body.amount === "string" && req.body.amount.trim() === "") {
+        throw new Error("Amount cannot be empty");
     }
 
-    if (req.body.amount !== undefined && req.body.amount <= 0) {
-        throw new Error("Amount must be greater than 0");
-    }
-
-    const validTypes = ["income", "expense"];
-    if (req.body.type && !validTypes.includes(req.body.type)) {
+    const VALID_TYPES = new Set(["income", "expense"]);
+    if (req.body.type && !VALID_TYPES.has(req.body.type)) {
         throw new Error("Invalid transaction type");
     }
 
-    if (req.body.category) {
-        req.body.category = req.body.category.toLowerCase();
-    }
-
-    const validCategories = [
+    const VALID_CATEGORIES = new Set([
         "salary", "freelance", "food", "rent", "transport",
         "shopping", "entertainment", "health", "education", "investment", "other"
-    ];
-
-    if (req.body.category && !validCategories.includes(req.body.category)) {
+    ]);
+    if (req.body.category && !VALID_CATEGORIES.has(req.body.category)) {
         throw new Error("Invalid transaction category");
+    }
+
+    if (req.body.transactionDate) {
+        const date = new Date(req.body.transactionDate);
+        if (isNaN(date.getTime())) {
+            throw new Error("Invalid transaction date");
+        }
+    }
+    if (req.body.merchant) {
+        req.body.merchant = req.body.merchant.trim();
     }
 }
 
