@@ -148,15 +148,51 @@ const updateTransactionById = async (req, res) => {
         );
 
         res.status(400).json({
-            message: `Failed to update profile`,
+            message: `Failed to update transaction`,
             error: "BAD_REQUEST",
         });
     }
+}
+
+const deleteTransactionById = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const transactionId = req.params.transactionId;
+
+        if (!mongoose.Types.ObjectId.isValid(transactionId))
+            throw new Error("Invalid transaction ID");
+
+        const deletedTransaction = await Transaction.findOneAndDelete({
+            _id: transactionId,
+            userId,
+        });
+
+        if (!deletedTransaction) throw new Error("Transaction not found");
+
+        res.status(200).json({
+            message: "Transaction deleted successfully",
+            data: deletedTransaction,
+        });
+
+    }
+    catch (err) {
+        console.error(
+            new Date().toISOString(),
+            "ERROR:", err.message
+        );
+
+        res.status(400).json({
+            message: `Failed to delete transaction`,
+            error: "BAD_REQUEST",
+        });
+    }
+
 }
 
 module.exports = {
     addTransaction,
     getTransactions,
     getTransactionById,
-    updateTransactionById
+    updateTransactionById,
+    deleteTransactionById
 };

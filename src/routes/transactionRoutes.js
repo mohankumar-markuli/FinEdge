@@ -6,11 +6,13 @@ const { userAuth } = require("../middleware/userAuth");
 const { addTransaction,
     getTransactions,
     getTransactionById,
-    updateTransactionById } = require("../controllers/transactionController");
+    updateTransactionById,
+    deleteTransactionById } = require("../controllers/transactionController");
 
 transactionRouter.post("/", userAuth, addTransaction);
 transactionRouter.get("/", userAuth, getTransactions);
 transactionRouter.get("/:transactionId", userAuth, getTransactionById);
 transactionRouter.patch("/:transactionId", userAuth, updateTransactionById);
+transactionRouter.delete("/:transactionId", userAuth, deleteTransactionById);
 
 module.exports = transactionRouter;
