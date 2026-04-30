@@ -6,8 +6,8 @@ const { viewUser, editUser, changePassword } = require("../controllers/userContr
 
 userRouter.use(userAuth);
 
-userRouter.get('/view', viewUser);
-userRouter.patch('/edit', editUser);
-userRouter.patch('/changepassword', changePassword);
+userRouter.get('/profile', viewUser);
+userRouter.patch('/profile', editUser);
+userRouter.patch('/password', changePassword);
 
 module.exports = userRouter;
