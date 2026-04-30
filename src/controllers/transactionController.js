@@ -1,6 +1,8 @@
-const Transaction = require("../models/transactionModel");
-const { validateEditTransactionData } = require("../middleware/validator");
 const mongoose = require("mongoose");
+const Transaction = require("../models/transactionModel");
+
+const { validateEditTransactionData } = require("../middleware/validator");
+const { transactionFilter } = require("../services/transactionService");
 
 const addTransaction = async (req, res) => {
     try {
@@ -53,16 +55,17 @@ const addTransaction = async (req, res) => {
 
 const getTransactions = async (req, res) => {
     try {
-        const userId = req.user._id;
-        const transactions = await Transaction.find({
-            userId
-        }).sort({ transactionDate: -1 });
+        const filter = transactionFilter(req);
+
+        const transactions = await Transaction.find(filter)
+            .sort({ transactionDate: -1 });
 
         res.status(200).json({
             message: "Transactions fetched successfully",
             count: transactions.length,
             data: transactions,
         });
+
     } catch (err) {
         console.error(new Date().toISOString(), "ERROR:", err.message,);
 
