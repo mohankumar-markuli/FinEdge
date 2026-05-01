@@ -2,8 +2,6 @@
 
 A backend API for managing personal finances including authentication, transactions, filtering, and analytics.
 
----
-
 ## Project Overview
 
 FinEdge is a **Node.js + Express + MongoDB** backend that allows users to:
@@ -14,8 +12,6 @@ FinEdge is a **Node.js + Express + MongoDB** backend that allows users to:
 - Filter transactions
 - View analytics (summary, monthly, yearly trends)
 
----
-
 ## Tech Stack
 
 - Node.js
@@ -24,8 +20,6 @@ FinEdge is a **Node.js + Express + MongoDB** backend that allows users to:
 - JWT Authentication (via cookies)
 - bcrypt (password hashing)
 - validator (input validation)
-
----
 
 ## Project Setup & Execution
 
@@ -64,12 +58,10 @@ Server runs at:
 http://localhost:3000
 ```
 
----
-
 ## Health Check
-
+```
 GET /api/health
-
+```
 ```json
 {
   "status": "OK",
@@ -78,14 +70,12 @@ GET /api/health
 }
 ```
 
----
-
 ## Auth APIs
 
 ### 1. Signup
-
+```
 POST /api/v1/auth/signup
-
+```
 ```json
 {
   "firstName": "Airtribe",
@@ -95,56 +85,19 @@ POST /api/v1/auth/signup
   "currency": "INR"
 }
 ```
-
-Response
-
-```json
-{
-  "message": "User Airtribe registered successfully",
-  "data": {
-    "_id": "69f458c70ce26d30eb97932b",
-    "firstName": "Airtribe",
-    "lastName": "School",
-    "emailId": "airtribe@gmail.com",
-    "currency": "INR"
-  }
-}
-```
-
 ### 2. Login
-
+```
 POST /api/v1/auth/login
-
+```
 ```json
 {
   "emailId": "airtribe123@gmail.com",
   "password": "Airtribe@123"
 }
 ```
-
-Response
-
-```json
-{
-  "message": "Airtribe Logged In Successfully",
-  "data": {
-    "_id": "69f459a00ce26d30eb97932d",
-    "firstName": "Airtribe",
-    "lastName": "tribe",
-    "emailId": "airtribe123@gmail.com",
-    "currency": "INR"
-  }
-}
-```
-
 ### 3. Logout
-
+```
 POST /api/v1/auth/logout
-
-```json
-{
-  "message": "Logout Successful"
-}
 ```
 
 ---
@@ -192,8 +145,6 @@ PATCH /api/v1/users/password
 }
 ```
 
----
-
 ## Transaction APIs
 
 ### 1. Add Transaction
@@ -213,21 +164,21 @@ POST /api/v1/transactions
 ```
 
 ### 2. Get All Transactions
-
+```
 GET /api/v1/transactions
-
+```
 ### 3. Get Recent Transactions
-
+```
 GET /api/v1/transactions/recent
-
+```
 ### 4. Get Transaction by ID
-
+```
 GET /api/v1/transactions/:transactionId
-
+```
 ### 5. Update Transaction
-
+```
 PATCH /api/v1/transactions/:transactionId
-
+```
 ```json
 {
   "transactionDate": "2026-04-09",
@@ -235,11 +186,10 @@ PATCH /api/v1/transactions/:transactionId
   "description": "demo transaction"
 }
 ```
-
 ### 6. Delete Transaction
-
+```
 DELETE /api/v1/transactions/:transactionId
-
+```
 ## Transaction Filters
 
 ### Example
@@ -285,20 +235,41 @@ GET /api/v1/analytics/trends/monthly
 
 ```
 GET /api/v1/analytics/trends/yearly
-``
+```
+
 ### Analytics Filters
 ```
-
 /api/v1/analytics/trends/yearly?category=food&type=expense&startDate=2026-01-01&endDate=2026-12-31
-
 ```
 
-🧠 Features
-Clean MVC architecture (Routes → Controllers → Services → Validators)
-Secure authentication (JWT cookies)
-Input validation
-MongoDB aggregation pipelines
-Pagination support
-Advanced filtering
-Scalable structure
+## Features
+
+- Clean MVC architecture (Routes → Controllers → Services → Validators)
+- Secure authentication (JWT cookies)
+- Input validation
+- MongoDB aggregation pipelines
+- Pagination support
+- Advanced filtering
+- Scalable structure
+
+## Folder Structure
+
 ```
+src/
+│── controllers/
+│── services/
+│── models/
+│── routes/
+│── middlewares/
+│── utils/
+│── data/
+│── app.js
+```
+
+## Important Notes
+
+- All protected routes require authentication
+- Dates must be in yyyy-mm-dd format
+- Amount must be greater than 0
+- Type must be income or expense
+
