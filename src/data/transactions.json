@@ -1,0 +1,632 @@
+[
+    {
+        "type": "income",
+        "category": "salary",
+        "amount": 50000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-01-01T10:00:00.000Z",
+        "merchant": "company",
+        "description": "salary jan"
+    },
+    {
+        "type": "expense",
+        "category": "rent",
+        "amount": 15000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-01-02T10:00:00.000Z",
+        "merchant": "landlord",
+        "description": "rent"
+    },
+    {
+        "type": "expense",
+        "category": "food",
+        "amount": 350,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-01-03T10:00:00.000Z",
+        "merchant": "zomato",
+        "description": "lunch"
+    },
+    {
+        "type": "expense",
+        "category": "transport",
+        "amount": 200,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-01-04T10:00:00.000Z",
+        "merchant": "uber",
+        "description": "cab"
+    },
+    {
+        "type": "expense",
+        "category": "shopping",
+        "amount": 1200,
+        "paymentMethod": "card",
+        "transactionDate": "2026-01-05T10:00:00.000Z",
+        "merchant": "amazon",
+        "description": "shopping"
+    },
+    {
+        "type": "income",
+        "category": "freelance",
+        "amount": 8000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-01-10T10:00:00.000Z",
+        "merchant": "client",
+        "description": "freelance"
+    },
+    {
+        "type": "expense",
+        "category": "entertainment",
+        "amount": 500,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-01-11T10:00:00.000Z",
+        "merchant": "netflix",
+        "description": "subscription"
+    },
+    {
+        "type": "expense",
+        "category": "health",
+        "amount": 900,
+        "paymentMethod": "cash",
+        "transactionDate": "2026-01-12T10:00:00.000Z",
+        "merchant": "pharmacy",
+        "description": "medicine"
+    },
+    {
+        "type": "expense",
+        "category": "education",
+        "amount": 2000,
+        "paymentMethod": "card",
+        "transactionDate": "2026-01-13T10:00:00.000Z",
+        "merchant": "course",
+        "description": "course"
+    },
+    {
+        "type": "expense",
+        "category": "investment",
+        "amount": 5000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-01-14T10:00:00.000Z",
+        "merchant": "stocks",
+        "description": "investment"
+    },
+    {
+        "type": "income",
+        "category": "salary",
+        "amount": 52000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-02-01T10:00:00.000Z",
+        "merchant": "company",
+        "description": "salary feb"
+    },
+    {
+        "type": "expense",
+        "category": "rent",
+        "amount": 15000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-02-02T10:00:00.000Z",
+        "merchant": "landlord",
+        "description": "rent"
+    },
+    {
+        "type": "expense",
+        "category": "food",
+        "amount": 400,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-02-03T10:00:00.000Z",
+        "merchant": "swiggy",
+        "description": "dinner"
+    },
+    {
+        "type": "expense",
+        "category": "transport",
+        "amount": 250,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-02-04T10:00:00.000Z",
+        "merchant": "ola",
+        "description": "ride"
+    },
+    {
+        "type": "expense",
+        "category": "shopping",
+        "amount": 1800,
+        "paymentMethod": "card",
+        "transactionDate": "2026-02-05T10:00:00.000Z",
+        "merchant": "flipkart",
+        "description": "gadgets"
+    },
+    {
+        "type": "income",
+        "category": "freelance",
+        "amount": 10000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-02-10T10:00:00.000Z",
+        "merchant": "client",
+        "description": "project"
+    },
+    {
+        "type": "expense",
+        "category": "entertainment",
+        "amount": 600,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-02-11T10:00:00.000Z",
+        "merchant": "spotify",
+        "description": "music"
+    },
+    {
+        "type": "expense",
+        "category": "health",
+        "amount": 700,
+        "paymentMethod": "cash",
+        "transactionDate": "2026-02-12T10:00:00.000Z",
+        "merchant": "clinic",
+        "description": "checkup"
+    },
+    {
+        "type": "expense",
+        "category": "education",
+        "amount": 1500,
+        "paymentMethod": "card",
+        "transactionDate": "2026-02-13T10:00:00.000Z",
+        "merchant": "course",
+        "description": "learning"
+    },
+    {
+        "type": "expense",
+        "category": "investment",
+        "amount": 6000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-02-14T10:00:00.000Z",
+        "merchant": "mutual fund",
+        "description": "sip"
+    },
+    {
+        "type": "expense",
+        "category": "food",
+        "amount": 300,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-03-01T10:00:00.000Z",
+        "merchant": "zomato",
+        "description": "breakfast"
+    },
+    {
+        "type": "expense",
+        "category": "food",
+        "amount": 450,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-03-02T10:00:00.000Z",
+        "merchant": "swiggy",
+        "description": "dinner"
+    },
+    {
+        "type": "expense",
+        "category": "transport",
+        "amount": 180,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-03-03T10:00:00.000Z",
+        "merchant": "uber",
+        "description": "cab"
+    },
+    {
+        "type": "expense",
+        "category": "shopping",
+        "amount": 2200,
+        "paymentMethod": "card",
+        "transactionDate": "2026-03-04T10:00:00.000Z",
+        "merchant": "amazon",
+        "description": "clothes"
+    },
+    {
+        "type": "income",
+        "category": "freelance",
+        "amount": 7000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-03-05T10:00:00.000Z",
+        "merchant": "client",
+        "description": "gig"
+    },
+    {
+        "type": "expense",
+        "category": "entertainment",
+        "amount": 800,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-03-06T10:00:00.000Z",
+        "merchant": "netflix",
+        "description": "movies"
+    },
+    {
+        "type": "expense",
+        "category": "health",
+        "amount": 1200,
+        "paymentMethod": "cash",
+        "transactionDate": "2026-03-07T10:00:00.000Z",
+        "merchant": "hospital",
+        "description": "treatment"
+    },
+    {
+        "type": "expense",
+        "category": "education",
+        "amount": 1800,
+        "paymentMethod": "card",
+        "transactionDate": "2026-03-08T10:00:00.000Z",
+        "merchant": "course",
+        "description": "training"
+    },
+    {
+        "type": "expense",
+        "category": "investment",
+        "amount": 4000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-03-09T10:00:00.000Z",
+        "merchant": "stocks",
+        "description": "equity"
+    },
+    {
+        "type": "income",
+        "category": "salary",
+        "amount": 51000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-03-10T10:00:00.000Z",
+        "merchant": "company",
+        "description": "salary mar"
+    },
+    {
+        "type": "income",
+        "category": "salary",
+        "amount": 53000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-04-01T10:00:00.000Z",
+        "merchant": "company",
+        "description": "salary apr"
+    },
+    {
+        "type": "expense",
+        "category": "rent",
+        "amount": 15000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-04-02T10:00:00.000Z",
+        "merchant": "landlord",
+        "description": "rent"
+    },
+    {
+        "type": "expense",
+        "category": "food",
+        "amount": 420,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-04-03T10:00:00.000Z",
+        "merchant": "zomato",
+        "description": "lunch"
+    },
+    {
+        "type": "expense",
+        "category": "transport",
+        "amount": 260,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-04-04T10:00:00.000Z",
+        "merchant": "uber",
+        "description": "ride"
+    },
+    {
+        "type": "expense",
+        "category": "shopping",
+        "amount": 2000,
+        "paymentMethod": "card",
+        "transactionDate": "2026-04-05T10:00:00.000Z",
+        "merchant": "amazon",
+        "description": "shopping"
+    },
+    {
+        "type": "income",
+        "category": "freelance",
+        "amount": 9000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-04-06T10:00:00.000Z",
+        "merchant": "client",
+        "description": "freelance work"
+    },
+    {
+        "type": "expense",
+        "category": "entertainment",
+        "amount": 700,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-04-07T10:00:00.000Z",
+        "merchant": "netflix",
+        "description": "subscription"
+    },
+    {
+        "type": "expense",
+        "category": "health",
+        "amount": 1100,
+        "paymentMethod": "cash",
+        "transactionDate": "2026-04-08T10:00:00.000Z",
+        "merchant": "pharmacy",
+        "description": "medicine"
+    },
+    {
+        "type": "expense",
+        "category": "education",
+        "amount": 1700,
+        "paymentMethod": "card",
+        "transactionDate": "2026-04-09T10:00:00.000Z",
+        "merchant": "course",
+        "description": "learning"
+    },
+    {
+        "type": "expense",
+        "category": "investment",
+        "amount": 6500,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-04-10T10:00:00.000Z",
+        "merchant": "mutual fund",
+        "description": "sip"
+    },
+    {
+        "type": "expense",
+        "category": "food",
+        "amount": 380,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-04-11T10:00:00.000Z",
+        "merchant": "swiggy",
+        "description": "dinner"
+    },
+    {
+        "type": "expense",
+        "category": "transport",
+        "amount": 210,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-04-12T10:00:00.000Z",
+        "merchant": "ola",
+        "description": "ride"
+    },
+    {
+        "type": "expense",
+        "category": "shopping",
+        "amount": 2500,
+        "paymentMethod": "card",
+        "transactionDate": "2026-04-13T10:00:00.000Z",
+        "merchant": "flipkart",
+        "description": "electronics"
+    },
+    {
+        "type": "income",
+        "category": "freelance",
+        "amount": 8500,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-04-14T10:00:00.000Z",
+        "merchant": "client",
+        "description": "side project"
+    },
+    {
+        "type": "expense",
+        "category": "entertainment",
+        "amount": 900,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-04-15T10:00:00.000Z",
+        "merchant": "spotify",
+        "description": "music"
+    },
+    {
+        "type": "income",
+        "category": "salary",
+        "amount": 54000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-05-01T10:00:00.000Z",
+        "merchant": "company",
+        "description": "salary may"
+    },
+    {
+        "type": "expense",
+        "category": "rent",
+        "amount": 15000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-05-02T10:00:00.000Z",
+        "merchant": "landlord",
+        "description": "rent"
+    },
+    {
+        "type": "expense",
+        "category": "food",
+        "amount": 450,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-05-03T10:00:00.000Z",
+        "merchant": "zomato",
+        "description": "lunch"
+    },
+    {
+        "type": "expense",
+        "category": "transport",
+        "amount": 300,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-05-04T10:00:00.000Z",
+        "merchant": "uber",
+        "description": "cab"
+    },
+    {
+        "type": "expense",
+        "category": "shopping",
+        "amount": 2100,
+        "paymentMethod": "card",
+        "transactionDate": "2026-05-05T10:00:00.000Z",
+        "merchant": "amazon",
+        "description": "shopping"
+    },
+    {
+        "type": "income",
+        "category": "freelance",
+        "amount": 11000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-05-06T10:00:00.000Z",
+        "merchant": "client",
+        "description": "freelance"
+    },
+    {
+        "type": "expense",
+        "category": "entertainment",
+        "amount": 650,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-05-07T10:00:00.000Z",
+        "merchant": "netflix",
+        "description": "movies"
+    },
+    {
+        "type": "expense",
+        "category": "health",
+        "amount": 1300,
+        "paymentMethod": "cash",
+        "transactionDate": "2026-05-08T10:00:00.000Z",
+        "merchant": "clinic",
+        "description": "treatment"
+    },
+    {
+        "type": "expense",
+        "category": "education",
+        "amount": 1900,
+        "paymentMethod": "card",
+        "transactionDate": "2026-05-09T10:00:00.000Z",
+        "merchant": "course",
+        "description": "course"
+    },
+    {
+        "type": "expense",
+        "category": "investment",
+        "amount": 7000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-05-10T10:00:00.000Z",
+        "merchant": "stocks",
+        "description": "investment"
+    },
+    {
+        "type": "expense",
+        "category": "food",
+        "amount": 500,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-05-11T10:00:00.000Z",
+        "merchant": "swiggy",
+        "description": "dinner"
+    },
+    {
+        "type": "expense",
+        "category": "transport",
+        "amount": 240,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-05-12T10:00:00.000Z",
+        "merchant": "ola",
+        "description": "ride"
+    },
+    {
+        "type": "expense",
+        "category": "shopping",
+        "amount": 2700,
+        "paymentMethod": "card",
+        "transactionDate": "2026-05-13T10:00:00.000Z",
+        "merchant": "flipkart",
+        "description": "shopping"
+    },
+    {
+        "type": "income",
+        "category": "freelance",
+        "amount": 9500,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-05-14T10:00:00.000Z",
+        "merchant": "client",
+        "description": "project"
+    },
+    {
+        "type": "expense",
+        "category": "entertainment",
+        "amount": 800,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-05-15T10:00:00.000Z",
+        "merchant": "spotify",
+        "description": "music"
+    },
+    {
+        "type": "income",
+        "category": "salary",
+        "amount": 55000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-06-01T10:00:00.000Z",
+        "merchant": "company",
+        "description": "salary june"
+    },
+    {
+        "type": "expense",
+        "category": "rent",
+        "amount": 15000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-06-02T10:00:00.000Z",
+        "merchant": "landlord",
+        "description": "rent"
+    },
+    {
+        "type": "expense",
+        "category": "food",
+        "amount": 480,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-06-03T10:00:00.000Z",
+        "merchant": "zomato",
+        "description": "lunch"
+    },
+    {
+        "type": "expense",
+        "category": "transport",
+        "amount": 260,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-06-04T10:00:00.000Z",
+        "merchant": "uber",
+        "description": "cab"
+    },
+    {
+        "type": "expense",
+        "category": "shopping",
+        "amount": 2300,
+        "paymentMethod": "card",
+        "transactionDate": "2026-06-05T10:00:00.000Z",
+        "merchant": "amazon",
+        "description": "shopping"
+    },
+    {
+        "type": "income",
+        "category": "freelance",
+        "amount": 12000,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-06-06T10:00:00.000Z",
+        "merchant": "client",
+        "description": "freelance"
+    },
+    {
+        "type": "expense",
+        "category": "entertainment",
+        "amount": 900,
+        "paymentMethod": "upi",
+        "transactionDate": "2026-06-07T10:00:00.000Z",
+        "merchant": "netflix",
+        "description": "movies"
+    },
+    {
+        "type": "expense",
+        "category": "health",
+        "amount": 1500,
+        "paymentMethod": "cash",
+        "transactionDate": "2026-06-08T10:00:00.000Z",
+        "merchant": "hospital",
+        "description": "treatment"
+    },
+    {
+        "type": "expense",
+        "category": "education",
+        "amount": 2000,
+        "paymentMethod": "card",
+        "transactionDate": "2026-06-09T10:00:00.000Z",
+        "merchant": "course",
+        "description": "learning"
+    },
+    {
+        "type": "expense",
+        "category": "investment",
+        "amount": 7500,
+        "paymentMethod": "bank",
+        "transactionDate": "2026-06-10T10:00:00.000Z",
+        "merchant": "mutual fund",
+        "description": "sip"
+    }
+]
