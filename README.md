@@ -1,37 +1,18 @@
-# FinEdge – Personal Finance & Expense Tracker API
+# FinEdge – Expense & Transaction Management API
 
-A backend application to manage personal finances by tracking income and expenses, with powerful analytics like summaries and monthly trends.
+A backend API for managing personal finances including authentication, transactions, filtering, and analytics.
 
 ---
 
-## Features
+## Project Overview
 
-### Authentication
+FinEdge is a **Node.js + Express + MongoDB** backend that allows users to:
 
-- User registration
-- User login (JWT-based authentication)
-- Protected routes using middleware
-
-### Transactions
-
-- Add income/expense
-- Fetch all transactions
-- Get transaction by ID
-- Update transaction
-- Delete transaction
-
-### Filtering & Search
-
-- Filter by category (`?category=food`)
-- Filter by type (`?type=expense`)
-- Date range filtering (`startDate`, `endDate`)
-- Search by keyword (`?search=lunch`)
-
-### Analytics (Bonus)
-
-- Summary (Total Income, Expense, Balance)
-- Monthly trends (income vs expense)
-- Recent transactions
+- Authenticate (Signup/Login/Logout)
+- Manage profile & password
+- Track transactions (CRUD)
+- Filter transactions
+- View analytics (summary, monthly, yearly trends)
 
 ---
 
@@ -39,172 +20,285 @@ A backend application to manage personal finances by tracking income and expense
 
 - Node.js
 - Express.js
-- MongoDB (Mongoose)
-- JWT Authentication
-- dotenv
+- MongoDB + Mongoose
+- JWT Authentication (via cookies)
+- bcrypt (password hashing)
+- validator (input validation)
 
 ---
 
-## Project Structure
+## Project Setup & Execution
 
-```
-FinEdge/
-│
-├── config/              # Database configuration
-├── controllers/         # Business logic
-├── models/              # Mongoose schemas
-├── routes/              # API routes
-├── middlewares/         # Logger, Auth, Error handler
-├── utils/               # Filters & helper functions
-├── .env                 # Environment variables
-├── app.js               # Main entry point
-└── README.md
-```
-
----
-
-## Setup Instructions
-
-### 1. Clone the Repository
+### 1. Clone the repo
 
 ```bash
 git clone <your-repo-url>
 cd FinEdge
 ```
 
-### 2. Install Dependencies
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Create `.env` File
+### 3. Setup environment variables
+
+Create a .env file:
 
 ```
 PORT=3000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
+MONGO_URI=<your_mongodb_uri>
+JWT_SECRET=<your_secret>
 ```
 
-### 4. Start the Server
+### 4. Run the server
 
 ```bash
 npm start
 ```
 
----
+Server runs at:
 
-## API Endpoints
-
-### Auth
-
-| Method | Route                 |
-| ------ | --------------------- |
-| POST   | /api/v1/auth/register |
-| POST   | /api/v1/auth/login    |
-
----
-
-### User
-
-| Method | Route                 |
-| ------ | --------------------- |
-| GET    | /api/v1/users/profile |
-
----
-
-### Transactions
-
-| Method | Route                               |
-| ------ | ----------------------------------- |
-| POST   | /api/v1/transactions                |
-| GET    | /api/v1/transactions                |
-| GET    | /api/v1/transactions/:transactionId |
-| PATCH  | /api/v1/transactions/:transactionId |
-| DELETE | /api/v1/transactions/:transactionId |
-
----
-
-### Filters Examples
-
+```bash
+http://localhost:3000
 ```
-GET /api/v1/transactions?category=food
-GET /api/v1/transactions?type=expense
-GET /api/v1/transactions?search=lunch
-GET /api/v1/transactions?startDate=2026-04-01&endDate=2026-04-30
-```
-
----
-
-### Analytics
-
-| Method | Route                       |
-| ------ | --------------------------- |
-| GET    | /api/v1/analytics/summary   |
-| GET    | /api/v1/analytics/monthly   |
-| GET    | /api/v1/transactions/recent |
-
----
-
-## Example Response
-
-### Summary API
-
-```json
-{
-  "totalIncome": 80000,
-  "totalExpense": 30000,
-  "balance": 50000
-}
-```
-
----
-
-## Middleware Used
-
-- Logger Middleware (logs request method & URL)
-- Authentication Middleware (JWT verification)
-- Global Error Handler
 
 ---
 
 ## Health Check
 
-```
 GET /api/health
-```
-
-Response:
 
 ```json
 {
   "status": "OK",
   "message": "Server is running",
-  "timestamp": "2026-04-30T10:00:00.000Z"
+  "timestamp": "2026-05-01T07:34:46.296Z"
 }
 ```
 
 ---
 
-## Future Improvements
+## Auth APIs
 
-- Budget management module
-- AI-based expense categorization
-- Frontend dashboard integration
-- Caching for analytics
-- Rate limiting middleware
+### 1. Signup
+
+POST /api/v1/auth/signup
+
+```json
+{
+  "firstName": "Airtribe",
+  "lastName": "School",
+  "emailId": "airtribe@gmail.com",
+  "password": "Airtribe@123",
+  "currency": "INR"
+}
+```
+
+Response
+
+```json
+{
+  "message": "User Airtribe registered successfully",
+  "data": {
+    "_id": "69f458c70ce26d30eb97932b",
+    "firstName": "Airtribe",
+    "lastName": "School",
+    "emailId": "airtribe@gmail.com",
+    "currency": "INR"
+  }
+}
+```
+
+### 2. Login
+
+POST /api/v1/auth/login
+
+```json
+{
+  "emailId": "airtribe123@gmail.com",
+  "password": "Airtribe@123"
+}
+```
+
+Response
+
+```json
+{
+  "message": "Airtribe Logged In Successfully",
+  "data": {
+    "_id": "69f459a00ce26d30eb97932d",
+    "firstName": "Airtribe",
+    "lastName": "tribe",
+    "emailId": "airtribe123@gmail.com",
+    "currency": "INR"
+  }
+}
+```
+
+### 3. Logout
+
+POST /api/v1/auth/logout
+
+```json
+{
+  "message": "Logout Successful"
+}
+```
 
 ---
 
-## Author
+## User APIs
 
-- Mohankumar Markuli Chandrayigowda
+### 1. Get User Profile
+
+GET /api/v1/users/profile
+Response
+
+```json
+{
+  "message": "User Airtribe fetched Successfully",
+  "data": {
+    "_id": "69f459a00ce26d30eb97932d",
+    "firstName": "Airtribe",
+    "lastName": "tribe",
+    "emailId": "airtribe123@gmail.com",
+    "currency": "INR"
+  }
+}
+```
+
+### 2. Update User Profile
+
+PATCH /api/v1/users/profile
+
+```json
+{
+  "firstName": "Air",
+  "lastName": "Tribe",
+  "currency": "INR"
+}
+```
+
+### 3. Change User Password
+
+PATCH /api/v1/users/password
+
+```json
+{
+  "password": "Airtribe@123",
+  "newPassword": "123@Airtribe"
+}
+```
 
 ---
 
-## Notes
+## Transaction APIs
 
-- Built using MVC architecture
-- Uses MongoDB for data persistence
-- Follows REST API best practices
-- Fully supports filtering, search, and analytics
+### 1. Add Transaction
+
+POST /api/v1/transactions
+
+```json
+{
+  "type": "expense",
+  "category": "freelance",
+  "amount": 45000,
+  "paymentMethod": "bank",
+  "merchant": "student",
+  "description": "web-designer",
+  "transactionDate": "1998-04-09"
+}
+```
+
+### 2. Get All Transactions
+
+GET /api/v1/transactions
+
+### 3. Get Recent Transactions
+
+GET /api/v1/transactions/recent
+
+### 4. Get Transaction by ID
+
+GET /api/v1/transactions/:transactionId
+
+### 5. Update Transaction
+
+PATCH /api/v1/transactions/:transactionId
+
+```json
+{
+  "transactionDate": "2026-04-09",
+  "paymentMethod": "upi",
+  "description": "demo transaction"
+}
+```
+
+### 6. Delete Transaction
+
+DELETE /api/v1/transactions/:transactionId
+
+## Transaction Filters
+
+### Example
+
+```
+GET /api/v1/transactions?category=food&type=expense&paymentMethod=card
+```
+
+| Query Param   | Description               |
+| ------------- | ------------------------- |
+| category      | food, rent, shopping, etc |
+| type          | income / expense          |
+| paymentMethod | cash / card / upi / bank  |
+| startDate     | yyyy-mm-dd                |
+| endDate       | yyyy-mm-dd                |
+| search        | merchant/description      |
+| page          | pagination                |
+| limit         | pagination                |
+
+## Analytics APIs
+
+### Summary
+
+```
+GET /api/v1/analytics/summary
+```
+
+Returns:
+
+```
+totalIncome
+totalExpense
+balance
+```
+
+### Monthly Trends
+
+```
+GET /api/v1/analytics/trends/monthly
+```
+
+### Yearly Trends
+
+```
+GET /api/v1/analytics/trends/yearly
+``
+### Analytics Filters
+```
+
+/api/v1/analytics/trends/yearly?category=food&type=expense&startDate=2026-01-01&endDate=2026-12-31
+
+```
+
+🧠 Features
+Clean MVC architecture (Routes → Controllers → Services → Validators)
+Secure authentication (JWT cookies)
+Input validation
+MongoDB aggregation pipelines
+Pagination support
+Advanced filtering
+Scalable structure
+```
