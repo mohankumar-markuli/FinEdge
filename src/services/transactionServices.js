@@ -90,9 +90,29 @@ const transactionFilter = (req) => {
 
     const filter = { userId };
 
-    if (category) filter.category = category;
-    if (type) filter.type = type;
-    if (paymentMethod) filter.paymentMethod = paymentMethod;
+    if (category) {
+        if (Array.isArray(category)) {
+            filter.category = { $in: category };
+        } else {
+            filter.category = category;
+        }
+    }
+
+    if (category) {
+        if (Array.isArray(type)) {
+            filter.type = { $in: type };
+        } else {
+            filter.type = type;
+        }
+    }
+
+    if (paymentMethod) {
+        if (Array.isArray(paymentMethod)) {
+            filter.paymentMethod = { $in: paymentMethod };
+        } else {
+            filter.paymentMethod = paymentMethod;
+        }
+    }
 
 
     if (startDate || endDate) {
