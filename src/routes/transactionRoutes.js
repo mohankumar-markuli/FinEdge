@@ -6,17 +6,19 @@ const { userAuth } = require("../middlewares/userAuth");
 const { addTransaction,
     getTransactions,
     getRecentTransactions,
-    getTransactionById,
-    updateTransactionById,
-    deleteTransactionById } = require("../controllers/transactionController");
+    getTransaction,
+    updateTransaction,
+    deleteTransaction } = require("../controllers/transactionController");
+
+const { validateTransactionFields, validateEditTransactionData, validateObjectId } = require("../middlewares/validator");
 
 transactionRouter.use(userAuth);
 
-transactionRouter.post("/", addTransaction);
+transactionRouter.post("/", validateTransactionFields, addTransaction);
 transactionRouter.get("/", getTransactions);
 transactionRouter.get("/recent", getRecentTransactions);
-transactionRouter.get("/:transactionId", getTransactionById);
-transactionRouter.patch("/:transactionId", updateTransactionById);
-transactionRouter.delete("/:transactionId", deleteTransactionById);
+transactionRouter.get("/:transactionId", validateObjectId, getTransaction);
+transactionRouter.patch("/:transactionId", validateObjectId, validateEditTransactionData, updateTransaction);
+transactionRouter.delete("/:transactionId", validateObjectId, deleteTransaction);
 
 module.exports = transactionRouter;
