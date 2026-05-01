@@ -84,8 +84,9 @@ const sanitize = (t) => ({
     description: t.description,
 });
 
-const transactionFilter = (userId, query) => {
-    const { category, type, startDate, endDate, paymentMethod, search } = query;
+const transactionFilter = (req) => {
+    userId = req.user._id;
+    const { category, type, startDate, endDate, paymentMethod, search } = req.query;
 
     const filter = { userId };
 

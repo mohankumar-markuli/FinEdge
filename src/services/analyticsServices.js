@@ -3,7 +3,7 @@ const { transactionFilter } = require("../services/transactionServices");
 
 const getSummaryService = async (req) => {
     const filter = transactionFilter(req);
-
+    console.log(filter);
     const result = await Transaction.aggregate([
         { $match: filter },
         {
@@ -13,6 +13,8 @@ const getSummaryService = async (req) => {
             }
         }
     ]);
+
+    console.log(result);
 
     const summary = result.reduce((acc, item) => {
         acc[item._id] = item.total;
