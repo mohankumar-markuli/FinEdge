@@ -1,5 +1,6 @@
 const { getSummaryService,
-    getMonthlyTrendsService } = require("../services/analyticsServices");
+    getMonthlyTrendsService,
+    getYearlyTrendsService } = require("../services/analyticsServices");
 
 const getSummary = async (req, res, next) => {
     try {
