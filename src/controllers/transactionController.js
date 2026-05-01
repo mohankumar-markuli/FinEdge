@@ -188,9 +188,16 @@ const deleteTransactionById = async (req, res, next) => {
 
         if (!deletedTransaction) throw new Error("Transaction not found");
 
+        const deleteTansactionResponse = {
+            _id: deletedTransaction._id,
+            type: deletedTransaction.type,
+            category: deletedTransaction.category,
+            amount: deletedTransaction.amount,
+        }
+
         res.status(200).json({
             message: "Transaction deleted successfully",
-            data: deletedTransaction,
+            data: deleteTansactionResponse,
         });
 
     }
