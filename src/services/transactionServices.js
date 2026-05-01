@@ -98,7 +98,7 @@ const transactionFilter = (req) => {
         }
     }
 
-    if (category) {
+    if (type) {
         if (Array.isArray(type)) {
             filter.type = { $in: type };
         } else {
