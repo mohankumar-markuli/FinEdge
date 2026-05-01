@@ -7,7 +7,7 @@ const { createTransactionService,
     getTransactionByIdService,
     updateTransactionService,
     deleteTransactionService,
-    transactionFilter } = require("../services/transactionService");
+    transactionFilter } = require("../services/transactionServices");
 
 const addTransaction = async (req, res, next) => {
     try {

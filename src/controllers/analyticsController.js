@@ -1,5 +1,5 @@
 const Transaction = require("../models/transactionModel");
-const { transactionFilter } = require("../services/transactionService");
+const { transactionFilter } = require("../services/transactionServices");
 
 const getSummary = async (req, res) => {
     try {
