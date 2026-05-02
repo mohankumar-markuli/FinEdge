@@ -59,9 +59,11 @@ http://localhost:3000
 ```
 
 ## Health Check
+
 ```
 GET /api/health
 ```
+
 ```json
 {
   "status": "OK",
@@ -73,9 +75,11 @@ GET /api/health
 ## Auth APIs
 
 ### 1. Signup
+
 ```
 POST /api/v1/auth/signup
 ```
+
 ```json
 {
   "firstName": "Airtribe",
@@ -85,17 +89,22 @@ POST /api/v1/auth/signup
   "currency": "INR"
 }
 ```
+
 ### 2. Login
+
 ```
 POST /api/v1/auth/login
 ```
+
 ```json
 {
   "emailId": "airtribe123@gmail.com",
   "password": "Airtribe@123"
 }
 ```
+
 ### 3. Logout
+
 ```
 POST /api/v1/auth/logout
 ```
@@ -164,21 +173,29 @@ POST /api/v1/transactions
 ```
 
 ### 2. Get All Transactions
+
 ```
 GET /api/v1/transactions
 ```
+
 ### 3. Get Recent Transactions
+
 ```
 GET /api/v1/transactions/recent
 ```
+
 ### 4. Get Transaction by ID
+
 ```
 GET /api/v1/transactions/:transactionId
 ```
+
 ### 5. Update Transaction
+
 ```
 PATCH /api/v1/transactions/:transactionId
 ```
+
 ```json
 {
   "transactionDate": "2026-04-09",
@@ -186,10 +203,13 @@ PATCH /api/v1/transactions/:transactionId
   "description": "demo transaction"
 }
 ```
+
 ### 6. Delete Transaction
+
 ```
 DELETE /api/v1/transactions/:transactionId
 ```
+
 ## Transaction Filters
 
 ### Example
@@ -238,6 +258,7 @@ GET /api/v1/analytics/trends/yearly
 ```
 
 ### Analytics Filters
+
 ```
 /api/v1/analytics/trends/yearly?category=food&type=expense&startDate=2026-01-01&endDate=2026-12-31
 ```
@@ -255,15 +276,95 @@ GET /api/v1/analytics/trends/yearly
 ## Folder Structure
 
 ```
-src/
-│── controllers/
-│── services/
-│── models/
-│── routes/
-│── middlewares/
-│── utils/
-│── data/
-│── app.js
+FinEdge/
+│
+├── coverage/                  # Jest code coverage reports
+├── node_modules/              # Dependencies
+│
+├── src/                       # Application source code
+│   │
+│   ├── config/                # Configuration files
+│   │   └── database.js        # MongoDB connection setup
+│   │
+│   ├── controllers/           # Route handlers (business logic layer)
+│   │   ├── analyticsController.js
+│   │   ├── authController.js
+│   │   ├── transactionController.js
+│   │   └── userController.js
+│   │
+│   ├── data/                  # Static/mock JSON data
+│   │   ├── transactions.json
+│   │   └── users.json
+│   │
+│   ├── middlewares/           # Express middlewares
+│   │   ├── errorHandler.js    # Global error handler
+│   │   ├── logger.js          # Request logging
+│   │   ├── userAuth.js        # Authentication middleware
+│   │   └── validator.js       # Input validation logic
+│   │
+│   ├── models/                # Mongoose schemas
+│   │   ├── transactionModel.js
+│   │   └── userModel.js
+│   │
+│   ├── routes/                # API route definitions
+│   │   ├── analyticsRoutes.js
+│   │   ├── authRoutes.js
+│   │   ├── transactionRoutes.js
+│   │   └── userRoutes.js
+│   │
+│   ├── services/              # Business logic (service layer)
+│   │   ├── analyticsServices.js
+│   │   ├── authServices.js
+│   │   ├── transactionServices.js
+│   │   └── userServices.js
+│   │
+│   ├── utils/                 # Utility/helper functions
+│   │   └── aiHelper.js
+│   │
+│   ├── app.js                 # Express app setup (middlewares, routes)
+│   └── server.js              # Server entry point
+│
+├── test/                      # Test suite (mirrors src structure)
+│   │
+│   ├── config/
+│   │   └── database.test.js
+│   │
+│   ├── controllers/
+│   │   ├── analyticsController.test.js
+│   │   ├── authController.test.js
+│   │   ├── transactionController.test.js
+│   │   └── userController.test.js
+│   │
+│   ├── middleware/
+│   │   ├── errorHandler.test.js
+│   │   ├── logger.test.js
+│   │   ├── userAuth.test.js
+│   │   └── validator.test.js
+│   │
+│   ├── models/
+│   │   └── userModel.test.js
+│   │
+│   ├── routes/
+│   │   ├── analyticsRoutes.test.js
+│   │   ├── authRoutes.test.js
+│   │   ├── transactionRoutes.test.js
+│   │   └── userRoutes.test.js
+│   │
+│   ├── services/
+│   │   ├── analyticsServices.test.js
+│   │   ├── authServices.test.js
+│   │   ├── transactionServices.test.js
+│   │   └── userServices.test.js
+│   │
+│   └── utils/
+│       └── testApp.js         # Test-specific Express app setup
+│
+├── .env                       # Environment variables
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── LICENSE
+└── README.md
 ```
 
 ## Important Notes
@@ -272,4 +373,3 @@ src/
 - Dates must be in yyyy-mm-dd format
 - Amount must be greater than 0
 - Type must be income or expense
-
