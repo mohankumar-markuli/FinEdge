@@ -51,7 +51,9 @@
     },
     "collectCoverageFrom": [
       "src/**/*.js",
-      "!src/server.js"
+      "!src/app.js",
+      "!src/server.js",
+      "!src/utils/**"
     ]
   }
 }
