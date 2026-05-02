@@ -22,6 +22,8 @@ const validateSignUpData = (req, res, next) => {
             throw new Error("Currency is required");
         }
 
+        next();
+
     } catch (err) {
         next(err);
     }

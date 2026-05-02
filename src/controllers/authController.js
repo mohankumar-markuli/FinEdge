@@ -5,7 +5,6 @@ const { getJWT, getHashPassword } = require("../services/authServices");
 
 const userSignUp = async (req, res, next) => {
     try {
-        validateSignUpData(req);
 
         const { firstName, lastName, emailId, password, currency } = req.body;
 
