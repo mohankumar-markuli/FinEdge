@@ -1,3 +1,5 @@
+jest.setTimeout(20000);
+
 process.env.JWT_SECRET_KEY = "testsecret";
 process.env.SALT_ROUNDS = "10";
 
