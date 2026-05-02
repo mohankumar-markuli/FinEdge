@@ -1,3 +1,10 @@
+// mocks
+jest.mock("../../src/services/analyticsServices", () => ({
+    getSummaryService: jest.fn(),
+    getMonthlyTrendsService: jest.fn(),
+    getYearlyTrendsService: jest.fn()
+}));
+
 const {
     getSummary,
     getMonthlyTrends,
@@ -10,20 +17,13 @@ const {
     getYearlyTrendsService
 } = require("../../src/services/analyticsServices");
 
-// ---- MOCK SERVICES ----
-jest.mock("../../src/services/analyticsServices");
-
-describe("Analytics Controller Unit Tests", () => {
+describe("Analytics Controller", () => {
 
     let req, res, next;
 
     beforeEach(() => {
         req = {
-            user: {
-                _id: "user123",
-                currency: "INR"
-            },
-            query: {}
+            user: { currency: "INR" }
         };
 
         res = {
@@ -36,14 +36,14 @@ describe("Analytics Controller Unit Tests", () => {
         jest.clearAllMocks();
     });
 
-    // ================= SUMMARY =================
+    // summary
     describe("getSummary", () => {
 
         test("should return summary successfully", async () => {
             const mockData = {
                 totalIncome: 1000,
-                totalExpense: 500,
-                balance: 500
+                totalExpense: 200,
+                balance: 800
             };
 
             getSummaryService.mockResolvedValue(mockData);
@@ -61,22 +61,22 @@ describe("Analytics Controller Unit Tests", () => {
         });
 
         test("should call next on error", async () => {
-            getSummaryService.mockRejectedValue(new Error("Error"));
+            const error = new Error("Summary error");
+
+            getSummaryService.mockRejectedValue(error);
 
             await getSummary(req, res, next);
 
-            expect(next).toHaveBeenCalled();
+            expect(next).toHaveBeenCalledWith(error);
         });
 
     });
 
-    // ================= MONTHLY =================
+    // monthly
     describe("getMonthlyTrends", () => {
 
-        test("should return monthly trends successfully", async () => {
-            const mockData = [
-                { month: 1, income: 1000, expense: 200 }
-            ];
+        test("should return monthly trends", async () => {
+            const mockData = [];
 
             getMonthlyTrendsService.mockResolvedValue(mockData);
 
@@ -92,22 +92,22 @@ describe("Analytics Controller Unit Tests", () => {
         });
 
         test("should call next on error", async () => {
-            getMonthlyTrendsService.mockRejectedValue(new Error("Error"));
+            const error = new Error("Monthly error");
+
+            getMonthlyTrendsService.mockRejectedValue(error);
 
             await getMonthlyTrends(req, res, next);
 
-            expect(next).toHaveBeenCalled();
+            expect(next).toHaveBeenCalledWith(error);
         });
 
     });
 
-    // ================= YEARLY =================
+    // yearly
     describe("getYearlyTrends", () => {
 
-        test("should return yearly trends successfully", async () => {
-            const mockData = [
-                { year: 2026, income: 5000, expense: 2000 }
-            ];
+        test("should return yearly trends", async () => {
+            const mockData = [];
 
             getYearlyTrendsService.mockResolvedValue(mockData);
 
@@ -123,11 +123,13 @@ describe("Analytics Controller Unit Tests", () => {
         });
 
         test("should call next on error", async () => {
-            getYearlyTrendsService.mockRejectedValue(new Error("Error"));
+            const error = new Error("Yearly error");
+
+            getYearlyTrendsService.mockRejectedValue(error);
 
             await getYearlyTrends(req, res, next);
 
-            expect(next).toHaveBeenCalled();
+            expect(next).toHaveBeenCalledWith(error);
         });
 
     });

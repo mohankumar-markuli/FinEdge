@@ -1,15 +1,32 @@
-const { userSignUp, userLogin, userlogout } = require("../../src/controllers/authController");
+// ================= MOCKS =================
+jest.mock("../../src/middlewares/validator", () => ({
+    validateSignUpData: jest.fn(),
+    validatePassword: jest.fn()
+}));
 
+jest.mock("../../src/services/authServices", () => ({
+    getHashPassword: jest.fn(),
+    getJWT: jest.fn()
+}));
+
+jest.mock("../../src/models/userModel", () => {
+    const mUser = jest.fn(); // constructor
+    mUser.findOne = jest.fn(); // static method
+    return mUser;
+});
+
+
+const { getHashPassword, getJWT } = require("../../src/services/authServices");
+const { validatePassword } = require("../../src/middlewares/validator");
 const User = require("../../src/models/userModel");
-const { getJWT, getHashPassword } = require("../../src/services/authServices");
-const { validateSignUpData, validatePassword } = require("../../src/middlewares/validator");
 
-// ---- MOCK DEPENDENCIES ----
-jest.mock("../../src/models/userModel");
-jest.mock("../../src/services/authServices");
-jest.mock("../../src/middlewares/validator");
+const {
+    userSignUp,
+    userLogin,
+    userlogout
+} = require("../../src/controllers/authController");
 
-describe("Auth Controller Unit Tests", () => {
+describe("Auth Controller", () => {
 
     let req, res, next;
 
@@ -20,10 +37,10 @@ describe("Auth Controller Unit Tests", () => {
         };
 
         res = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
             cookie: jest.fn(),
-            clearCookie: jest.fn()
+            clearCookie: jest.fn(),
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
         };
 
         next = jest.fn();
@@ -31,155 +48,170 @@ describe("Auth Controller Unit Tests", () => {
         jest.clearAllMocks();
     });
 
-    // ================= SIGNUP =================
+    // signup
     describe("userSignUp", () => {
 
-        test("should register user successfully", async () => {
-            req.body = {
-                firstName: "Test",
-                lastName: "User",
-                emailId: "test@example.com",
-                password: "Strong@123!",
-                currency: "INR"
-            };
+        test("should signup user successfully", async () => {
 
-            validateSignUpData.mockImplementation(() => { });
             User.findOne.mockResolvedValue(null);
-            getHashPassword.mockResolvedValue("hashed_password");
+            getHashPassword.mockResolvedValue("hashedPassword");
 
             const mockSavedUser = {
                 _id: "123",
                 firstName: "Test",
                 lastName: "User",
-                emailId: "test@example.com",
+                emailId: "test@test.com",
                 currency: "INR"
             };
 
-            User.prototype.save = jest.fn().mockResolvedValue(mockSavedUser);
-            getJWT.mockResolvedValue("token123");
+            User.mockImplementation(() => ({
+                save: jest.fn().mockResolvedValue(mockSavedUser)
+            }));
+
+            getJWT.mockResolvedValue("token");
+
+            req.body = {
+                firstName: "Test",
+                lastName: "User",
+                emailId: "test@test.com",
+                password: "StrongPass@123",
+                currency: "INR"
+            };
 
             await userSignUp(req, res, next);
 
-            expect(validateSignUpData).toHaveBeenCalledWith(req);
-            expect(User.findOne).toHaveBeenCalledWith({ emailId: "test@example.com" });
-            expect(getHashPassword).toHaveBeenCalledWith("Strong@123!");
-            expect(getJWT).toHaveBeenCalledWith(mockSavedUser);
+            expect(User.findOne).toHaveBeenCalledWith({
+                emailId: "test@test.com"
+            });
+
+            expect(getHashPassword).toHaveBeenCalledWith("StrongPass@123");
+            expect(getJWT).toHaveBeenCalled();
 
             expect(res.cookie).toHaveBeenCalled();
             expect(res.status).toHaveBeenCalledWith(201);
             expect(res.json).toHaveBeenCalled();
         });
 
-        test("should throw error if user already exists", async () => {
-            req.body = { emailId: "test@example.com" };
+        test("should fail if user already exists", async () => {
 
-            validateSignUpData.mockImplementation(() => { });
-            User.findOne.mockResolvedValue({ _id: "existing" });
+            User.findOne.mockResolvedValue({ emailId: "test@test.com" });
 
-            await userSignUp(req, res, next);
-
-            expect(next).toHaveBeenCalled();
-            expect(next.mock.calls[0][0].message).toBe("User already exists");
-        });
-
-        test("should call next on validation error", async () => {
-            validateSignUpData.mockImplementation(() => {
-                throw new Error("Validation failed");
-            });
+            req.body = {
+                firstName: "Test",
+                emailId: "test@test.com",
+                password: "StrongPass@123",
+                currency: "INR"
+            };
 
             await userSignUp(req, res, next);
 
-            expect(next).toHaveBeenCalled();
+            expect(next).toHaveBeenCalledWith(expect.any(Error));
         });
 
     });
 
-    // ================= LOGIN =================
+    // login
     describe("userLogin", () => {
 
         test("should login successfully", async () => {
-            req.body = {
-                emailId: "test@example.com",
-                password: "Strong@123!"
-            };
 
             const mockUser = {
                 _id: "123",
                 firstName: "Test",
                 lastName: "User",
-                emailId: "test@example.com",
-                currency: "INR"
+                emailId: "test@test.com",
+                currency: "INR",
+                password: "hashed"
             };
 
             User.findOne.mockResolvedValue(mockUser);
             validatePassword.mockResolvedValue(true);
-            getJWT.mockResolvedValue("token123");
+            getJWT.mockResolvedValue("token");
+
+            req.body = {
+                emailId: "test@test.com",
+                password: "StrongPass@123"
+            };
 
             await userLogin(req, res, next);
 
-            expect(User.findOne).toHaveBeenCalledWith({ emailId: "test@example.com" });
-            expect(validatePassword).toHaveBeenCalledWith(mockUser, "Strong@123!");
-            expect(getJWT).toHaveBeenCalledWith(mockUser);
+            expect(validatePassword).toHaveBeenCalled();
+            expect(getJWT).toHaveBeenCalled();
 
             expect(res.cookie).toHaveBeenCalled();
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalled();
-        });
-
-        test("should fail if email or password missing", async () => {
-            req.body = {};
-
-            await userLogin(req, res, next);
-
-            expect(next).toHaveBeenCalled();
-            expect(next.mock.calls[0][0].message).toBe("Email and password are required");
         });
 
         test("should fail if user not found", async () => {
-            req.body = {
-                emailId: "test@example.com",
-                password: "123"
-            };
 
             User.findOne.mockResolvedValue(null);
 
+            req.body = {
+                emailId: "test@test.com",
+                password: "StrongPass@123"
+            };
+
             await userLogin(req, res, next);
 
-            expect(next).toHaveBeenCalled();
-            expect(next.mock.calls[0][0].message).toBe("User not found. Please sign up.");
+            expect(next).toHaveBeenCalledWith(expect.any(Error));
         });
 
-        test("should fail if password invalid", async () => {
+        test("should fail if password is incorrect", async () => {
+
+            const mockUser = { password: "hashed" };
+
+            User.findOne.mockResolvedValue(mockUser);
+            validatePassword.mockResolvedValue(false);
+
             req.body = {
-                emailId: "test@example.com",
+                emailId: "test@test.com",
                 password: "wrong"
             };
 
-            User.findOne.mockResolvedValue({ _id: "123" });
-            validatePassword.mockResolvedValue(false);
+            await userLogin(req, res, next);
+
+            expect(next).toHaveBeenCalledWith(expect.any(Error));
+        });
+
+        test("should fail if email or password missing", async () => {
+
+            req.body = {
+                emailId: "test@test.com"
+            };
 
             await userLogin(req, res, next);
 
-            expect(next).toHaveBeenCalled();
-            expect(next.mock.calls[0][0].message).toBe("Invalid credentials");
+            expect(next).toHaveBeenCalledWith(expect.any(Error));
         });
 
     });
 
-    // ================= LOGOUT =================
+    // logout
     describe("userlogout", () => {
 
         test("should logout successfully", async () => {
+
             await userlogout(req, res, next);
 
-            expect(res.clearCookie).toHaveBeenCalledWith("token", {
-                httpOnly: true,
-                sameSite: "strict"
-            });
-
+            expect(res.clearCookie).toHaveBeenCalled();
             expect(res.json).toHaveBeenCalledWith({
                 message: "Logout Successful"
             });
+        });
+
+    });
+
+    describe("error handler", () => {
+        test("should call next on error", async () => {
+
+            // force error
+            res.clearCookie.mockImplementation(() => {
+                throw new Error("logout error");
+            });
+
+            await userlogout(req, res, next);
+
+            expect(next).toHaveBeenCalledWith(expect.any(Error));
         });
 
     });

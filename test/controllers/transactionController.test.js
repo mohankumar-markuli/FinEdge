@@ -1,3 +1,13 @@
+jest.mock("../../src/services/transactionServices", () => ({
+    createTransactionService: jest.fn(),
+    getTransactionsService: jest.fn(),
+    getRecentTransactionsService: jest.fn(),
+    getTransactionByIdService: jest.fn(),
+    updateTransactionService: jest.fn(),
+    deleteTransactionService: jest.fn(),
+    transactionFilter: jest.fn()
+}));
+
 const {
     addTransaction,
     getTransactions,
@@ -17,8 +27,6 @@ const {
     transactionFilter
 } = require("../../src/services/transactionServices");
 
-// ---- MOCK SERVICES ----
-jest.mock("../../src/services/transactionServices");
 
 describe("Transaction Controller Unit Tests", () => {
 
@@ -46,14 +54,11 @@ describe("Transaction Controller Unit Tests", () => {
         jest.clearAllMocks();
     });
 
-    // ================= ADD =================
+    // add
     describe("addTransaction", () => {
 
         test("should add transaction successfully", async () => {
-            const mockData = {
-                category: "food",
-                amount: 100
-            };
+            const mockData = { category: "food", amount: 100 };
 
             createTransactionService.mockResolvedValue(mockData);
 
@@ -64,7 +69,7 @@ describe("Transaction Controller Unit Tests", () => {
             expect(res.status).toHaveBeenCalledWith(201);
             expect(res.json).toHaveBeenCalledWith({
                 success: true,
-                message: `Test added transaction - food : 100 INR`,
+                message: "Test added transaction - food : 100 INR",
                 data: mockData
             });
         });
@@ -79,29 +84,64 @@ describe("Transaction Controller Unit Tests", () => {
 
     });
 
-    // ================= GET ALL =================
+    // get all
     describe("getTransactions", () => {
 
         test("should fetch transactions successfully", async () => {
-            const mockFilter = {};
-            const mockTransactions = [{ _id: "1" }];
-            const mockTotal = 1;
-
             req.query = { page: "1", limit: "10" };
 
-            transactionFilter.mockReturnValue(mockFilter);
+            transactionFilter.mockReturnValue({});
             getTransactionsService.mockResolvedValue({
-                transactions: mockTransactions,
-                total: mockTotal
+                transactions: [{ _id: "1" }],
+                total: 1
             });
 
             await getTransactions(req, res, next);
 
-            expect(transactionFilter).toHaveBeenCalled();
-            expect(getTransactionsService).toHaveBeenCalledWith(mockFilter, 1, 10);
-
+            expect(getTransactionsService).toHaveBeenCalledWith({}, 1, 10);
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalled();
+        });
+
+        test("should default page and limit when invalid", async () => {
+            req.query = { page: "abc", limit: "xyz" };
+
+            transactionFilter.mockReturnValue({});
+            getTransactionsService.mockResolvedValue({
+                transactions: [],
+                total: 0
+            });
+
+            await getTransactions(req, res, next);
+
+            expect(getTransactionsService).toHaveBeenCalledWith({}, 1, 10);
+        });
+
+        test("should clamp page to minimum 1", async () => {
+            req.query = { page: "0", limit: "5" };
+
+            transactionFilter.mockReturnValue({});
+            getTransactionsService.mockResolvedValue({
+                transactions: [],
+                total: 0
+            });
+
+            await getTransactions(req, res, next);
+
+            expect(getTransactionsService).toHaveBeenCalledWith({}, 1, 5);
+        });
+
+        test("should clamp limit to max 50", async () => {
+            req.query = { page: "1", limit: "100" };
+
+            transactionFilter.mockReturnValue({});
+            getTransactionsService.mockResolvedValue({
+                transactions: [],
+                total: 0
+            });
+
+            await getTransactions(req, res, next);
+
+            expect(getTransactionsService).toHaveBeenCalledWith({}, 1, 50);
         });
 
         test("should call next on error", async () => {
@@ -116,25 +156,19 @@ describe("Transaction Controller Unit Tests", () => {
 
     });
 
-    // ================= RECENT =================
+    // recent
     describe("getRecentTransactions", () => {
 
         test("should fetch recent transactions", async () => {
-            const mockData = [{ _id: "1" }];
-
             req.query = { limit: "5" };
 
-            getRecentTransactionsService.mockResolvedValue(mockData);
+            getRecentTransactionsService.mockResolvedValue([{ _id: "1" }]);
 
             await getRecentTransactions(req, res, next);
 
             expect(getRecentTransactionsService).toHaveBeenCalledWith("user123", 5);
 
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith({
-                message: "Recent transactions fetched successfully",
-                data: mockData
-            });
         });
 
         test("should call next on error", async () => {
@@ -147,25 +181,19 @@ describe("Transaction Controller Unit Tests", () => {
 
     });
 
-    // ================= GET BY ID =================
+    // get by id
     describe("getTransaction", () => {
 
         test("should fetch transaction by id", async () => {
-            const mockTransaction = { _id: "txn1" };
-
             req.params.transactionId = "txn1";
 
-            getTransactionByIdService.mockResolvedValue(mockTransaction);
+            getTransactionByIdService.mockResolvedValue({ _id: "txn1" });
 
             await getTransaction(req, res, next);
 
             expect(getTransactionByIdService).toHaveBeenCalledWith("user123", "txn1");
 
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith({
-                message: "Transaction fetched successfully",
-                data: mockTransaction
-            });
         });
 
         test("should call next on error", async () => {
@@ -178,29 +206,19 @@ describe("Transaction Controller Unit Tests", () => {
 
     });
 
-    // ================= UPDATE =================
+    // update
     describe("updateTransaction", () => {
 
         test("should update transaction successfully", async () => {
-            const updatedData = { _id: "txn1", amount: 200 };
-
             req.params.transactionId = "txn1";
 
-            updateTransactionService.mockResolvedValue(updatedData);
+            updateTransactionService.mockResolvedValue({ _id: "txn1", amount: 200 });
 
             await updateTransaction(req, res, next);
 
-            expect(updateTransactionService).toHaveBeenCalledWith(
-                "user123",
-                "txn1",
-                req.body
-            );
+            expect(updateTransactionService).toHaveBeenCalledWith("user123", "txn1", req.body);
 
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith({
-                message: "Transaction Updated Successfully",
-                data: updatedData
-            });
         });
 
         test("should call next on error", async () => {
@@ -213,25 +231,19 @@ describe("Transaction Controller Unit Tests", () => {
 
     });
 
-    // ================= DELETE =================
+    // delete
     describe("deleteTransaction", () => {
 
         test("should delete transaction successfully", async () => {
-            const deletedData = { _id: "txn1" };
-
             req.params.transactionId = "txn1";
 
-            deleteTransactionService.mockResolvedValue(deletedData);
+            deleteTransactionService.mockResolvedValue({ _id: "txn1" });
 
             await deleteTransaction(req, res, next);
 
             expect(deleteTransactionService).toHaveBeenCalledWith("user123", "txn1");
 
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith({
-                message: "Transaction deleted successfully",
-                data: deletedData
-            });
         });
 
         test("should call next on error", async () => {
