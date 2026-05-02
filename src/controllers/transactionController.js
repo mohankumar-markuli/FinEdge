@@ -28,7 +28,7 @@ const addTransaction = async (req, res, next) => {
 
 const getTransactions = async (req, res, next) => {
     try {
-        const filter = transactionFilter(req.user._id, req.query);
+        const filter = transactionFilter(req);
 
         const page = Math.max(1, Number(req.query.page) || 1);
         const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 10));
