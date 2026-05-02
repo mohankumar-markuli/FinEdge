@@ -38,7 +38,6 @@ afterAll(async () => {
     await mongoServer.stop();
 });
 
-
 // get profile
 describe("GET /users/profile", () => {
 
@@ -59,7 +58,6 @@ describe("GET /users/profile", () => {
     });
 
 });
-
 
 // update profile
 describe("PATCH /users/profile", () => {
@@ -89,7 +87,6 @@ describe("PATCH /users/profile", () => {
     });
 
 });
-
 
 // change password
 describe("PATCH /users/password", () => {

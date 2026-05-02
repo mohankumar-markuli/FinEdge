@@ -80,7 +80,6 @@ describe("GET /transactions", () => {
 
 });
 
-
 // recent
 describe("GET /transactions/recent", () => {
 
@@ -93,7 +92,6 @@ describe("GET /transactions/recent", () => {
     });
 
 });
-
 
 // get by id
 describe("GET /transactions/:id", () => {
@@ -129,7 +127,6 @@ describe("GET /transactions/:id", () => {
 
 });
 
-
 // update
 describe("PATCH /transactions/:id", () => {
 
@@ -158,7 +155,6 @@ describe("PATCH /transactions/:id", () => {
     });
 
 });
-
 
 // delete
 describe("DELETE /transactions/:id", () => {

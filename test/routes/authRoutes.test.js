@@ -49,7 +49,7 @@ afterAll(async () => {
 });
 
 
-// ================= SIGNUP =================
+// signup
 describe("POST /auth/signup", () => {
 
     test("should create user", async () => {
@@ -87,7 +87,7 @@ describe("POST /auth/signup", () => {
 });
 
 
-// ================= LOGIN =================
+// login
 describe("POST /auth/login", () => {
 
     test("should login successfully", async () => {
@@ -130,7 +130,7 @@ describe("POST /auth/login", () => {
 });
 
 
-// ================= LOGOUT =================
+// logout
 describe("POST /auth/logout", () => {
 
     test("should logout successfully", async () => {
