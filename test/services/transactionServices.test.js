@@ -1,3 +1,5 @@
+jest.setTimeout(20000);
+
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
@@ -18,7 +20,7 @@ let userId;
 
 beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
-    await mongoose.connect(mongoServer.getUri());
+    await mongoose.connect(mongoServer.getUri(), { dbName: "test-db" });
 });
 
 beforeEach(async () => {
@@ -33,10 +35,10 @@ afterAll(async () => {
 
 describe("transactionService", () => {
 
-    // ================= CREATE =================
+    // create
     describe("createTransactionService", () => {
 
-        test("should create transaction (happy case)", async () => {
+        test("should create transaction", async () => {
             const data = {
                 type: "expense",
                 category: "food",
@@ -53,7 +55,7 @@ describe("transactionService", () => {
 
     });
 
-    // ================= GET TRANSACTIONS =================
+    // get transaction
     describe("getTransactionsService", () => {
 
         test("should return paginated transactions", async () => {
@@ -68,9 +70,16 @@ describe("transactionService", () => {
             expect(result.total).toBe(2);
         });
 
+        test("should return empty transactions", async () => {
+            const result = await getTransactionsService({ userId }, 1, 10);
+
+            expect(result.transactions).toEqual([]);
+            expect(result.total).toBe(0);
+        });
+
     });
 
-    // ================= RECENT =================
+    // recent
     describe("getRecentTransactionsService", () => {
 
         test("should return recent transactions", async () => {
@@ -86,10 +95,10 @@ describe("transactionService", () => {
 
     });
 
-    // ================= GET BY ID =================
+    // get by id
     describe("getTransactionByIdService", () => {
 
-        test("should return transaction (happy case)", async () => {
+        test("should return transaction", async () => {
             const txn = await Transaction.create({
                 userId,
                 type: "expense",
@@ -112,10 +121,10 @@ describe("transactionService", () => {
 
     });
 
-    // ================= UPDATE =================
+    // update
     describe("updateTransactionService", () => {
 
-        test("should update transaction (happy case)", async () => {
+        test("should update transaction", async () => {
             const txn = await Transaction.create({
                 userId,
                 type: "expense",
@@ -140,12 +149,25 @@ describe("transactionService", () => {
             ).rejects.toThrow("Transaction not found");
         });
 
+        // force branch
+        test("should throw if update returns null (mock)", async () => {
+            jest.spyOn(Transaction, "findOneAndUpdate").mockReturnValue({
+                select: jest.fn().mockResolvedValue(null)
+            });
+
+            await expect(
+                updateTransactionService("user", "id", {})
+            ).rejects.toThrow("Transaction not found");
+
+            jest.restoreAllMocks();
+        });
+
     });
 
-    // ================= DELETE =================
+    // delete
     describe("deleteTransactionService", () => {
 
-        test("should delete transaction (happy case)", async () => {
+        test("should delete transaction", async () => {
             const txn = await Transaction.create({
                 userId,
                 type: "expense",
@@ -166,9 +188,22 @@ describe("transactionService", () => {
             ).rejects.toThrow("Transaction not found");
         });
 
+        // force branch
+        test("should throw if delete returns null (mock)", async () => {
+            jest.spyOn(Transaction, "findOneAndDelete").mockReturnValue({
+                select: jest.fn().mockResolvedValue(null)
+            });
+
+            await expect(
+                deleteTransactionService("user", "id")
+            ).rejects.toThrow("Transaction not found");
+
+            jest.restoreAllMocks();
+        });
+
     });
 
-    // ================= FILTER =================
+    // filter
     describe("transactionFilter", () => {
 
         test("should build basic filter", () => {
@@ -181,6 +216,39 @@ describe("transactionService", () => {
 
             expect(filter.userId).toEqual(userId);
             expect(filter.category).toBe("food");
+        });
+
+        test("should handle category as array", () => {
+            const req = {
+                user: { _id: userId },
+                query: { category: ["food", "rent"] }
+            };
+
+            const filter = transactionFilter(req);
+
+            expect(filter.category.$in).toEqual(["food", "rent"]);
+        });
+
+        test("should handle type as array", () => {
+            const req = {
+                user: { _id: userId },
+                query: { type: ["income", "expense"] }
+            };
+
+            const filter = transactionFilter(req);
+
+            expect(filter.type.$in).toEqual(["income", "expense"]);
+        });
+
+        test("should handle paymentMethod as array", () => {
+            const req = {
+                user: { _id: userId },
+                query: { paymentMethod: ["upi", "cash"] }
+            };
+
+            const filter = transactionFilter(req);
+
+            expect(filter.paymentMethod.$in).toEqual(["upi", "cash"]);
         });
 
         test("should handle date range", () => {
@@ -201,11 +269,21 @@ describe("transactionService", () => {
         test("should throw on invalid startDate", () => {
             const req = {
                 user: { _id: userId },
-                query: { startDate: "invalid-date" }
+                query: { startDate: "invalid" }
             };
 
             expect(() => transactionFilter(req))
                 .toThrow("Invalid startDate");
+        });
+
+        test("should throw on invalid endDate", () => {
+            const req = {
+                user: { _id: userId },
+                query: { endDate: "invalid" }
+            };
+
+            expect(() => transactionFilter(req))
+                .toThrow("Invalid endDate");
         });
 
         test("should apply search filter", () => {
@@ -217,6 +295,17 @@ describe("transactionService", () => {
             const filter = transactionFilter(req);
 
             expect(filter.$or).toBeDefined();
+        });
+
+        test("should work with empty query", () => {
+            const req = {
+                user: { _id: userId },
+                query: {}
+            };
+
+            const filter = transactionFilter(req);
+
+            expect(filter.userId).toEqual(userId);
         });
 
     });

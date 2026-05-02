@@ -15,10 +15,9 @@ describe("authServices", () => {
         process.env.JWT_SECRET_KEY = "test_secret";
     });
 
-    // ================= getHashPassword =================
+    // getHashPassword 
     describe("getHashPassword", () => {
 
-        // ---- Happy Case ----
         test("should hash password correctly", async () => {
             bcrypt.hash.mockResolvedValue("hashed_password");
 
@@ -28,7 +27,6 @@ describe("authServices", () => {
             expect(result).toBe("hashed_password");
         });
 
-        // ---- Bad Case ----
         test("should throw error if bcrypt fails", async () => {
             bcrypt.hash.mockRejectedValue(new Error("hash failed"));
 
@@ -39,10 +37,10 @@ describe("authServices", () => {
 
     });
 
-    // ================= getJWT =================
+    //  getJWT 
     describe("getJWT", () => {
 
-        // ---- Happy Case ----
+
         test("should generate JWT token correctly", async () => {
             jwt.sign.mockReturnValue("mock_token");
 
@@ -59,7 +57,6 @@ describe("authServices", () => {
             expect(token).toBe("mock_token");
         });
 
-        // ---- Bad Case ----
         test("should throw error if jwt.sign fails", async () => {
             jwt.sign.mockImplementation(() => {
                 throw new Error("jwt failed");

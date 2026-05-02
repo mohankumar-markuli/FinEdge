@@ -6,7 +6,6 @@ const {
 
 const { getHashPassword } = require("../../src/services/authServices");
 
-// Mock dependency
 jest.mock("../../src/services/authServices", () => ({
     getHashPassword: jest.fn()
 }));
@@ -17,10 +16,9 @@ describe("userServices", () => {
         jest.clearAllMocks();
     });
 
-    // ================= getUserProfileService =================
+    //  getUserProfileService 
     describe("getUserProfileService", () => {
 
-        // ---- Happy Case ----
         test("should return formatted user profile", () => {
             const user = {
                 _id: "123",
@@ -44,10 +42,9 @@ describe("userServices", () => {
 
     });
 
-    // ================= updateUserService =================
+    //  updateUserService 
     describe("updateUserService", () => {
 
-        // ---- Happy Case ----
         test("should update user fields and return updated data", async () => {
             const user = {
                 _id: "123",
@@ -73,7 +70,6 @@ describe("userServices", () => {
             expect(result.lastName).toBe("User");
         });
 
-        // ---- Edge Case ----
         test("should handle empty updateData", async () => {
             const user = {
                 _id: "123",
@@ -90,7 +86,6 @@ describe("userServices", () => {
             expect(result.firstName).toBe("Test");
         });
 
-        // ---- Bad Case ----
         test("should throw if save fails", async () => {
             const user = {
                 save: jest.fn().mockRejectedValue(new Error("DB error"))
@@ -106,7 +101,6 @@ describe("userServices", () => {
     // changePasswordService 
     describe("changePasswordService", () => {
 
-        // Happy Case 
         test("should hash new password and save user", async () => {
             getHashPassword.mockResolvedValue("hashed_password");
 
@@ -123,7 +117,6 @@ describe("userServices", () => {
             expect(result).toBe(true);
         });
 
-        // Bad Case 
         test("should throw if hashing fails", async () => {
             getHashPassword.mockRejectedValue(new Error("hash error"));
 
